@@ -1,0 +1,20 @@
+projectName: Taxi-Agency
+gitUrl: 
+version: 0.0.0
+description: Object Database model for a Taxi Agency
+scripts:
+  test: main test
+  build: make build
+  clean: clean
+dependencies:
+  agauniyal/rang
+private: true
+keywords:
+  taxi
+  agency
+  database
+  object
+  cpp
+  model
+author: Karunika
+license: MIT
