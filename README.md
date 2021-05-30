@@ -7,7 +7,7 @@
 
 
 ## Introduction
-The motive of the project is to create a Object-oriented Database Model for a Taxi Agency.
+The motive of the project is to create an Object-oriented Database Model for a Taxi Agency.
 
 ## About
 Yet to be done.

@@ -3,6 +3,11 @@
 
 using namespace std;
 
+enum Status{
+    ONSHIFT,
+    IDOL
+};
+
 class User {
     protected:
         string firstname;

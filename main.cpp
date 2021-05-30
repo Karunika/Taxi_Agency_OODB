@@ -1,5 +1,6 @@
 #include <iostream>
 #include <exception>
+#include <cassert>
 #include "./include/TaxiAgency.hpp"
 #include "./config.hpp"
 #include "./dep/rang.hpp"
@@ -10,7 +11,7 @@ struct test_failure : public exception {
     };
     const char * what () const throw () {
         return msg;
-    }
+    };
 };
 
 using namespace std;
@@ -22,12 +23,13 @@ int main(){
         // Populate lists containers with sample CSV data
         myTaxiAgency.populate_taxies(TAXIES_FILE);
         myTaxiAgency.populate_customer_db(CUSTOMERS_FILE);
+        myTaxiAgency.populate_drivers_db(DRIVERS_FILE);
 
         // Print
-        cout << rang::fg::blue << "Taxies List:" << rang::fg::reset << endl;
         myTaxiAgency.print_taxies();
-        cout << rang::fg::blue << "Customers List:" << rang::fg::reset << endl;
         myTaxiAgency.print_customer_db();
+        myTaxiAgency.print_drivers_db();
+
 
         if(myTaxiAgency.retrieve_taxi_by_id("2012 Chevrolet Colorado Work Truck").index != 17)
             throw test_failure("Test Failed: Output was not correct");

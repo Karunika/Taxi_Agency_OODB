@@ -4,7 +4,6 @@
 #include <ctime>
 #include <cmath>
 
-#include "./TaxiAgency.hpp"
 #include "./Taxi.hpp"
 #include "./Driver.hpp"
 
@@ -16,19 +15,19 @@ class Shift{
         long time_limit;
         long kms_rode;
 
-        Driver driver_in_charge;
         Taxi car;
+
+        // uuids
+        string driver_in_charge_uuid;
+        string customer_uuid;
 
         int driver_idol_cost;
 
     public:
         Shift();
-        void clockIn(){
-            startTime = std::chrono::system_clock::now();
-            running = true;
-        }
-        void clockOut(){
-            endTime = std::chrono::system_clock::now();
-            running = false;
-        }       
+        Shift(string customer_uuid, string dirver_in_charge_uuid);
+        
+        // friend void Customer::clockIn(const Shift& S);
+        void clockIn();
+        void clockOut();
 };

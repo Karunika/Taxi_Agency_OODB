@@ -6,8 +6,9 @@
 
 #include "../include/User.hpp"
 #include "../include/Taxi.hpp"
-#include "../include/Customer.hpp"
 #include "../include/Driver.hpp"
+#include "../include/Customer.hpp"
+#include "../include/Shift.hpp"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ int TaxiAgency::DriverLimit = 64;
 
 int Taxi::TaxiAttributesCount = 5;
 int Customer::CustomerDetailsCount = 4;
+int Driver::DriverAttributesCount = 5;
 int User::MaxUUIDLength = 32;
 
 
@@ -61,7 +63,7 @@ void TaxiAgency::populate_taxies(const char* TAXIES_FILE){
             populate_fields(t, fields, Taxi::TaxiAttributesCount);
             taxi = Taxi(fields[0] == "\"True\"" ? true : false,
                         fields[1].substr(1, fields[1].length()-2),
-                        fields[2].substr(1, fields[1].length()-2),
+                        fields[2].substr(1, fields[2].length()-2),
                         stoi(fields[3]),
                         stoi(fields[4]));
 
@@ -85,7 +87,7 @@ void TaxiAgency::print_taxies(){
 };
 
 IndexInstance<Taxi> TaxiAgency::retrieve_taxi_by_id(string id){
-    for(long i = 0; i < taxies.size(); i++){
+    for(int i = 0; i < taxies.size(); i++){
         if(taxies[i].id == id){
             return {i, &taxies[i]};
         };
@@ -113,8 +115,9 @@ void TaxiAgency::populate_customer_db(const char* CUSTOMERS_FILE){
             populate_fields(t, fields, Customer::CustomerDetailsCount);
             customer = Customer(fields[0].substr(1, fields[0].length()-2),
                         fields[1].substr(1, fields[1].length()-2),
-                        fields[2].substr(1, fields[1].length()-2),
-                        stol(fields[3]));
+                        fields[2].substr(1, fields[2].length()-2),
+                        stol(fields[3])
+                        );
 
             customer_db.push_back(customer);
         }
@@ -134,11 +137,45 @@ void TaxiAgency::print_customer_db(){
 };
 
 
+void TaxiAgency::populate_drivers_db(const char* DRIVERS_FILE){
+    ifstream File;
+    File.open(DRIVERS_FILE);
+    Driver driver;
+    if(File.is_open()){
+        string t, fields[Driver::DriverAttributesCount];
+        getline(File, t); // skip heading row
+        while(getline(File, t)){
+            populate_fields(t, fields, Driver::DriverAttributesCount);
+            driver = Driver(fields[0].substr(1, fields[0].length()-2),
+                        fields[1].substr(1, fields[1].length()-2),
+                        fields[2].substr(1, fields[2].length()-2),
+                        fields[3].substr(1, fields[3].length()-2)
+                    );
+            cout << fields[3] << endl;
+            driver_db.push_back(driver);
+        }
+        File.close();
+    }else{
+        throw runtime_error("File couldn't be resolved");
+    }
+
+};
+
+void TaxiAgency::print_drivers_db(){
+    cout << rang::fg::blue << "Drivers List:" << rang::fg::reset << endl;
+    cout << "[" << endl;
+    for(auto driver: driver_db){
+        driver.print();
+    };
+    cout << "]" << endl;
+};
+
 int TaxiAgency::set_total_idol_taxies(){
     int total_idol_taxies = 0;
     for(auto taxi: taxies){
         total_idol_taxies += taxi.number;
     }
+    return total_idol_taxies;
 };
 
 ostream& operator<<(ostream& output, const TaxiAgency& A){
@@ -178,3 +215,4 @@ unordered_map<string, int> TaxiAgency::operator[](string entity){
     }
     throw out_of_range("The subscript parameter is invalid");
 };
+
