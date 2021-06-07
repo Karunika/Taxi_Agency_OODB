@@ -5,9 +5,9 @@
 
 using namespace std;
 
-Driver::Driver(string firstname, string lastname, string uuid, string dln)
+Driver::Driver(string firstname, string lastname, string uuid, string dln, Status status = IDOL)
     : User(firstname, lastname, uuid),
-    driving_license_num(dln){
+    driving_license_num(dln), status(status){
 
 };
 
@@ -17,6 +17,7 @@ ostream& operator<<(ostream& output, const Driver& D){
         "\n\t\tfirstname : " << D.firstname <<
         "\n\t\tlastname : " << D.lastname <<
         "\n\t\tdriving license number : " << D.driving_license_num <<
+        "\n\t\tStatus : " << (D.status == IDOL ? "IDOL" : "ONSHIFT") <<
         "\n\t}" <<
         endl;
     return output;

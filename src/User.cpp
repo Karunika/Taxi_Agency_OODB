@@ -18,6 +18,7 @@ void User::validate_uuid(string uuid){
     }
 };
 
+// 0-9 A-Z _ a-z
 User::User(){};
 
 User::User(string firstname, string lastname, string uuid)
@@ -44,3 +45,18 @@ bool operator!=(const User& u1, const User& u2){
     return u1.uuid != u2.uuid;
 };
 
+bool User::operator<(const string& uuid){
+    return this->uuid < uuid;    
+};
+
+bool User::operator>(const string& uuid){
+    return this->uuid > uuid;    
+};
+
+bool User::operator==(const string& uuid){
+    return this->uuid == uuid;    
+};
+
+bool User::operator!=(const string& uuid){
+    return this->uuid != uuid;    
+};

@@ -19,6 +19,8 @@ class User {
         User(string firstname, string lastname, string uuid);
         void validate_uuid(string uuid);
 
+        string getFirstname(){ return firstname; };
+        string getLastname(){ return lastname; };
         string getUUID(){ return uuid; };
 
         // Comparing uuids
@@ -26,4 +28,9 @@ class User {
         friend bool operator>(const User& u1, const User& u2);
         friend bool operator==(const User& u1, const User& u2);
         friend bool operator!=(const User& u1, const User& u2);
+
+        bool operator<(const string& uuid);
+        bool operator>(const string& uuid);
+        bool operator==(const string& uuid);
+        bool operator!=(const string& uuid);
 };

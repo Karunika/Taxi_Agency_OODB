@@ -16,7 +16,10 @@ class Driver : public User{
         static int DriverAttributesCount;
 
         Driver(){};
-        Driver(string firstname, string lastname, string uuid, string dln);
+        Driver(string firstname, string lastname, string uuid, string dln, Status status);
+
+        string getDLN(){ return driving_license_num; };
+        Status getStatus(){ return status; };
 
         friend ostream& operator<<(ostream& output, const Driver& D);
         void print();

@@ -1,5 +1,8 @@
 .DS_Store
 .vscode
+.VSCodeCounter
 *.o
+*.exe
 main
 output
+TODO.md

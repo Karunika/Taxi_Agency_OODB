@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class Customer;
+
 template <typename T>
 struct IndexInstance{
     int index;
@@ -24,13 +26,20 @@ class TaxiAgency{
     private:
         vector<Taxi> taxies;
         vector<Driver> driver_db;
+        vector<Customer> customer_db;
 
         list<Shift> current_shifts;
         list<Shift> shift_history;
 
-        vector<Customer> customer_db;
 
+        int DriverWagePerMonth; // 1000
 
+        int GarageLimit; // 64 (Brand Limit)
+        int EachCarLimit; // 4
+        int DriverLimit; // 64
+
+        IndexInstance<Driver> lastFreeDriver;
+        
         unordered_map<string, int> stats = {
             {"total_idol_taxies", 0},
             {"taxies_on_shift", 0},
@@ -43,12 +52,10 @@ class TaxiAgency{
 
 
     public:
-        static int GarageLimit; // 64
-        static int EachCarLimit; // 4
-        static int DriverLimit; // 64
 
         TaxiAgency();
-        // TaxiAgency(string TAXIES_FILE, string SHIFT_FILE_KEYWORD);
+        void print_agency_stats();
+        friend ostream& operator<<(ostream& output, TaxiAgency& A);
 
         int set_total_idol_taxies();
 
@@ -63,14 +70,12 @@ class TaxiAgency{
         void print_drivers_db();
 
         IndexInstance<Taxi> retrieve_taxi_by_id(string id);
+        IndexInstance<Driver> search_driver_by_uuid(string uuid);
+        IndexInstance<Customer> search_customer_by_uuid(string uuid);
+
         void add_taxi(bool hybrid, string id, string manufacturer, int fare_amount, int number);
         void add_customer(string firstname, string lastname, string uuid, int balance);
-
-        // IndexInstance<Driver> search_driver_by_uuid(string uuid);
-        // IndexInstance<Customer> search_customer_by_uuid(string uuid);
-
-        void print_agency_stats(){
-        };
+        void add_driver(string firstname, string lastname, string uuid, string dln, Status status);
 
 
         // Getter list funcitons using subscript
@@ -81,9 +86,17 @@ class TaxiAgency{
         unordered_map<string, int> operator[](string entity);
 
 
-        friend ostream& operator<<(ostream& output, const TaxiAgency& A);
-        // friend int book_taxi(string car_id, TaxiAgency& A);
 
+        int book_taxi(string customer_uuid, string car_id);
+
+        // upgrade capacity
+        // driver promotion
+        
+        void export_taxies(const char* TAXIES_FILE);
+        void export_customer_db(const char* TAXIES_FILE);
+        void export_driver_db(const char* TAXIES_FILE);
+
+        void export_all();
         
         // Customer add_customer(string firstname, string lastname, string uuid, double balance);
 

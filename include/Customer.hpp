@@ -3,7 +3,6 @@
 #include <exception>
 
 #include "./User.hpp"
-// #include "./TaxiAgency.hpp"
 
 using namespace std;
 
@@ -26,20 +25,20 @@ class Customer : public User{
         static int CustomerDetailsCount;
 
         Customer(){};
-        Customer(string firstname, string lastname, string uuid, long balance);
-        // int book_taxi(string car_id, TaxiAgency& A);
+        Customer(string firstname, string lastname, string uuid, long balance, Status status);
+        int book_taxi(string car_id);
 
         // int start_shift(){};
         int start_taxi();
         int stop_taxi();
         int end_shift();
 
-        //nope ig
-
         friend ostream& operator<<(ostream& output, const Customer& C);
         void print();
 
 
+        Status getStatus(){ return status; };
+        Status getBalance(){ return status; };
         // int book_taxi(string car_id, TaxiAgency& A);
 
         // ~Customer(){};
