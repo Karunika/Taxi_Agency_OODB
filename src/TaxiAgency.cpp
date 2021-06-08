@@ -238,7 +238,7 @@ void TaxiAgency::export_customer_db(const char* CUSTOMERS_FILE){
             File << "\"" << customer.getFirstname() << "\",";
             File << "\"" << customer.getLastname() << "\",";
             File << "\"" << customer.getUUID() << "\",";
-            File << customer.getBalance() << ",hello";
+            File << customer.getBalance() << ",";
             File << "\"" << (customer.getStatus() == IDOL ? "IDOL" : "ONSHIFT") << "\"\n";
         }
         File.close();
