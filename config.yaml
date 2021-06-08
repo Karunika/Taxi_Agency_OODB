@@ -3,12 +3,12 @@ gitUrl: https://github.com/Karunika/Taxi_Agency_OODB
 version: 0.0.0
 description: Object Oriented Database model for a Taxi Agency
 scripts:
-  test: main test
-  build: make build
+  build: make
+  reste: make reset
   clean: clean
 dependencies:
   agauniyal/rang
-private: true
+private: false
 keywords:
   taxi
   agency

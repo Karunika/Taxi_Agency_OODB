@@ -18,8 +18,10 @@ class Driver : public User{
         Driver(){};
         Driver(string firstname, string lastname, string uuid, string dln, Status status);
 
-        string getDLN(){ return driving_license_num; };
-        Status getStatus(){ return status; };
+        string getDLN();
+        Status getStatus();
+
+        void toggle_driver_status();
 
         friend ostream& operator<<(ostream& output, const Driver& D);
         void print();

@@ -29,6 +29,16 @@ User::User(string firstname, string lastname, string uuid)
     validate_uuid(uuid);
 };
 
+string User::updateFirstname(string firstname){
+    this->firstname = firstname;
+    return firstname;
+};
+
+string User::updateLastname(string lastname){
+    this->lastname = lastname;
+    return lastname;
+};
+
 bool operator<(const User& u1, const User& u2){
     return u1.uuid < u2.uuid;
 };

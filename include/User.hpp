@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -22,6 +23,9 @@ class User {
         string getFirstname(){ return firstname; };
         string getLastname(){ return lastname; };
         string getUUID(){ return uuid; };
+
+        string updateFirstname(string firstname);
+        string updateLastname(string lastname);
 
         // Comparing uuids
         friend bool operator<(const User& u1, const User& u2);

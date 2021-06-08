@@ -1,2 +1,3 @@
-"Firtsname","Lastname","uuid","balance"
+"firtsname","lastname","uuid","balance","status"
+"Krzysztof","Eleonora","Krzysztof",46,"IDOL"
 "John","Doe","johnDoe345",32,"IDOL"

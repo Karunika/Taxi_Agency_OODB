@@ -26,3 +26,18 @@ ostream& operator<<(ostream& output, const Driver& D){
 void Driver::print(){
     cout << *this;
 };
+
+void Driver::toggle_driver_status(){
+    if(status == IDOL)
+        status = ONSHIFT;
+    if(status == ONSHIFT)
+        status = IDOL;
+};
+
+string Driver::getDLN(){
+    return driving_license_num;
+};
+
+Status Driver::getStatus(){
+    return status;
+};

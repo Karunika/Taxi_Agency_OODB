@@ -1,2 +1,5 @@
-Firtsname,Lastname,uuid,balance
-"John","Doe","johnDoe345",32,"IDOL"
+"firtsname","lastname","uuid","balance","status"
+"Ireneusz","Brajan","Ireneusz",46,hello"IDOL"
+"Krzysztof","Eleonora","Krzysztof",46,hello"IDOL"
+"John","Doe","johnDoe345",32,hello"IDOL"
+"Pawel","Dobroslawa","pawel_dobro",52,hello"IDOL"

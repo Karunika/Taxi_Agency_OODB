@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Customer::Customer(string firstname, string lastname, string uuid, long balance = 0, Status status = IDOL)
+Customer::Customer(string firstname, string lastname, string uuid, int balance = 0, Status status = IDOL)
     : User(firstname, lastname, uuid),
     balance(balance), status(status){
 
@@ -26,4 +26,19 @@ ostream& operator<<(ostream& output, const Customer& C){
 
 void Customer::print(){
     cout << *this;
+};
+
+void Customer::toggle_customer_status(){
+    if(status == IDOL)
+        status = ONSHIFT;
+    if(status == ONSHIFT)
+        status = IDOL;
+};
+
+Status Customer::getStatus(){
+    return status;
+};
+
+int Customer::getBalance(){
+    return balance;
 };

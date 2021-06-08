@@ -27,6 +27,12 @@ TaxiAgency::TaxiAgency(){
     taxies.reserve(GarageLimit);
     driver_db.reserve(DriverLimit);
     customer_db.reserve(DriverLimit);
+
+    cout << rang::fg::yellow << "A Taxi Agency has been instantiated" << rang::fg::reset << endl;
+};
+
+TaxiAgency::~TaxiAgency(){
+    cout << rang::fg::yellow << "Taxi Agency has been purged" << rang::fg::reset << endl;
 };
 
 ostream& operator<<(ostream& output, TaxiAgency& A){
@@ -122,12 +128,28 @@ IndexInstance<Taxi> TaxiAgency::retrieve_taxi_by_id(string id){
     throw invalid_argument("Taxi with the id doesn't exist");
 };
 
-void TaxiAgency::add_taxi(bool hybrid, string id, string manufacturer, int fare_amount, int number = 1){
-    try{
-        retrieve_taxi_by_id(id).data->number += number;
-    }catch(...){
-        taxies.push_back(Taxi(hybrid, id, manufacturer, fare_amount, number));
-    }
+void TaxiAgency::insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number = 1){
+    if(taxies.size() == GarageLimit)
+        throw range_error("The limit of garage is reached. Need to upgrade the Agency!");
+    taxies.push_back(Taxi(hybrid, id, manufacturer, fare_amount, number));
+};
+
+void TaxiAgency::add_taxi_by_id(string id, int num = 1){
+    IndexInstance<Taxi> taxi = retrieve_taxi_by_id(id);
+    if(num < 0)
+        throw invalid_argument("Invalid Number provided");
+    if(taxi.data->number + num >= EachCarLimit)
+        throw invalid_argument("Number of a certain Taxi shouldn't increase beyond EachCarLimit.");
+    taxi.data->number += num;
+};
+
+void TaxiAgency::remove_taxi_by_id(string id, int num = 1){;
+    IndexInstance<Taxi> taxi = retrieve_taxi_by_id(id);
+    if(num < 0)
+        throw invalid_argument("Invalid Number provided");
+    if(taxi.data->number - num < 0)
+        throw invalid_argument("Not enough taxies to remove.");
+    taxi.data->number -= num;
 };
 
 void TaxiAgency::export_taxies(const char* TAXIES_FILE){
@@ -162,7 +184,7 @@ void TaxiAgency::populate_customer_db(const char* CUSTOMERS_FILE){
             customer = Customer(fields[0].substr(1, fields[0].length()-2),
                         fields[1].substr(1, fields[1].length()-2),
                         fields[2].substr(1, fields[2].length()-2),
-                        stol(fields[3]),
+                        stoi(fields[3]),
                         fields[4].substr(1, fields[4].length()-2) == "IDOL" ? IDOL : ONSHIFT);
             stats["customers"]++;
             customer_db.push_back(customer);
@@ -182,10 +204,48 @@ void TaxiAgency::print_customer_db(){
     cout << "]" << endl;
 };
 
-void export_customer_db(const char* TAXIES_FILE){
+IndexInstance<Customer> TaxiAgency::search_customer_by_uuid(string uuid){
+    return search_by_uuid(uuid, customer_db);
+};
+
+void TaxiAgency::add_customer(string firstname, string lastname, string uuid, int balance = 0, Status status = IDOL){
+    if(customer_db.size() == DriverLimit)
+        throw range_error("The maximum capacity of customer is reached. Need to upgrade the Agency!");
+    for(int i = 0; i < customer_db.size(); i++){
+        if(customer_db[i] == uuid){
+            throw invalid_argument("User with the UUID already exist.");
+        }
+        if(customer_db[i] > uuid){
+            Customer new_customer(firstname, lastname, uuid, balance, status);
+            customer_db.insert(customer_db.begin() + i, new_customer);
+            return;
+        }
+    };
+    Customer new_customer(firstname, lastname, uuid, balance, status);
+    customer_db.push_back(new_customer);
+}
+
+void TaxiAgency::delete_customer_user_by_uuid(string uuid){
 
 };
 
+void TaxiAgency::export_customer_db(const char* CUSTOMERS_FILE){
+    ofstream File;
+    File.open(CUSTOMERS_FILE);
+    if(File.is_open()){
+        File << "\"firtsname\",\"lastname\",\"uuid\",\"balance\",\"status\"\n";
+        for(auto customer : customer_db){
+            File << "\"" << customer.getFirstname() << "\",";
+            File << "\"" << customer.getLastname() << "\",";
+            File << "\"" << customer.getUUID() << "\",";
+            File << customer.getBalance() << ",hello";
+            File << "\"" << (customer.getStatus() == IDOL ? "IDOL" : "ONSHIFT") << "\"\n";
+        }
+        File.close();
+    }else{
+        throw runtime_error("File couldn't be resolved");
+    }
+}; // to be tested
 
 // Drivers Related Functions
 void TaxiAgency::populate_drivers_db(const char* DRIVERS_FILE){
@@ -230,21 +290,28 @@ void TaxiAgency::add_driver(string firstname, string lastname, string uuid, stri
     if(driver_db.size() == DriverLimit)
         throw range_error("The maximum vacancy of driver is reached. Need to upgrade the Agency!");
     for(int i = 0; i < driver_db.size(); i++){
-        cout << i;
+        if(driver_db[i] == uuid){
+            throw invalid_argument("User with the UUID already exist.");
+        }
         if(driver_db[i] > uuid){
             Driver new_driver(firstname, lastname, uuid, dln, status);
             driver_db.insert(driver_db.begin() + i, new_driver);
-            cout << i-1 << endl;
-            break;
+            return;
         }
     };
+    Driver new_driver(firstname, lastname, uuid, dln, status);
+    driver_db.push_back(new_driver);
+};
+
+void TaxiAgency::delete_driver_user_by_uuid(string uuid){
+
 };
 
 void TaxiAgency::export_driver_db(const char* DRIVERS_FILE){
     ofstream File;
     File.open(DRIVERS_FILE);
     if(File.is_open()){
-        File << "\"firtsname\",\"lastname\",\"uuid\",\"dlm\",\"status\"\n";
+        File << "\"firtsname\",\"lastname\",\"uuid\",\"dln\",\"status\"\n";
         for(auto driver : driver_db){
             File << "\"" << driver.getFirstname() << "\",";
             File << "\"" << driver.getLastname() << "\",";
@@ -258,13 +325,6 @@ void TaxiAgency::export_driver_db(const char* DRIVERS_FILE){
     }
 }
 
-int TaxiAgency::set_total_idol_taxies(){
-    int total_idol_taxies = 0;
-    for(auto taxi: taxies){
-        total_idol_taxies += taxi.number;
-    }
-    return total_idol_taxies;
-};
 
 int TaxiAgency::book_taxi(string customer_uuid, string car_id){
     try{
@@ -273,12 +333,10 @@ int TaxiAgency::book_taxi(string customer_uuid, string car_id){
             throw booking_unsuccessful("Taxi Unavailable");
         }
         taxi.data->number--;
-        // IndexInstance<Customer> customer = search_customer_by_uuid(customer_uuid);
-        // // TODO: add a status field in csv and change implementation accordingly
-        // if(customer.data->getStatus() == ONSHIFT){
-        //     throw booking_unsuccessful("Can't Book a Taxi while already ONSHIFT");
-        // }
-        // TODO: Driver wage implementations
+        IndexInstance<Customer> customer = search_customer_by_uuid(customer_uuid);
+        if(customer.data->getStatus() == ONSHIFT){
+            throw booking_unsuccessful("Can't Book a Taxi while already ONSHIFT");
+        }
         // Agency revenue/finance
 
         // if(customer.data->getBalance() < taxi.data->fare_amount*12 + driver_waiting_charges*12 + driver_wage){
@@ -292,6 +350,7 @@ int TaxiAgency::book_taxi(string customer_uuid, string car_id){
     // Shift();
     return 0;
 }
+
 
 // ostream& operator<<(ostream& output, const TaxiAgency& A){
 //     output << rang::fg::blue << "Taxies" << rang::fg::reset <<
@@ -331,4 +390,21 @@ unordered_map<string, int> TaxiAgency::operator[](string entity){
         return stats;
     }
     throw out_of_range("The subscript parameter is invalid");
+};
+
+
+
+void TaxiAgency::upgrade_agency_assets(int garage_limit, int each_car_limit, int driver_vacancies){
+    if(garage_limit < GarageLimit || each_car_limit < EachCarLimit || driver_vacancies < DriverLimit){
+        return;
+    }
+    this->GarageLimit = garage_limit;
+    this->EachCarLimit = each_car_limit;
+    this->DriverLimit = driver_vacancies;
+};
+
+void TaxiAgency::export_all(const char* TAXIES_FILE, const char* CUSTOMERS_FILE, const char* DRIVERS_FILE){
+    export_taxies(TAXIES_FILE);
+    export_customer_db(CUSTOMERS_FILE);
+    export_driver_db(DRIVERS_FILE);
 };

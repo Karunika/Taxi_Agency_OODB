@@ -11,13 +11,3 @@ Shift::Shift(string customer_uuid, string driver_in_charge_uuid)
     driver_in_charge_uuid(driver_in_charge_uuid){
 
 }
-
-void Shift::clockIn(){
-    startTime = std::chrono::system_clock::now();
-    running = true;
-}
-
-void Shift::clockOut(){
-    endTime = std::chrono::system_clock::now();
-    running = false;
-}

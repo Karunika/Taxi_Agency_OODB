@@ -17,7 +17,7 @@ struct booking_unsuccessful : public exception {
 
 class Customer : public User{
     private:
-        long balance;
+        int balance;
         // One customer can book only one taxi at a time
 
         Status status;
@@ -25,24 +25,13 @@ class Customer : public User{
         static int CustomerDetailsCount;
 
         Customer(){};
-        Customer(string firstname, string lastname, string uuid, long balance, Status status);
-        int book_taxi(string car_id);
-
-        // int start_shift(){};
-        int start_taxi();
-        int stop_taxi();
-        int end_shift();
-
+        Customer(string firstname, string lastname, string uuid, int balance, Status status);
+        
         friend ostream& operator<<(ostream& output, const Customer& C);
         void print();
 
-
-        Status getStatus(){ return status; };
-        Status getBalance(){ return status; };
-        // int book_taxi(string car_id, TaxiAgency& A);
-
-        // ~Customer(){};
+        Status getStatus();
+        int getBalance();
+        
+        void toggle_customer_status();
 };
-//hello yes
-
-// ayt wait

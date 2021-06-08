@@ -54,17 +54,14 @@ class TaxiAgency{
     public:
 
         TaxiAgency();
+        ~TaxiAgency();
         void print_agency_stats();
         friend ostream& operator<<(ostream& output, TaxiAgency& A);
 
-        int set_total_idol_taxies();
-
-        // Populate member lists
         void populate_taxies(const char* TAXIES_FILE);
         void populate_customer_db(const char* CUSTOMERS_FILE);
         void populate_drivers_db(const char* DRIVERS_FILE);
 
-        // Print member lists
         void print_taxies();
         void print_customer_db();
         void print_drivers_db();
@@ -73,12 +70,16 @@ class TaxiAgency{
         IndexInstance<Driver> search_driver_by_uuid(string uuid);
         IndexInstance<Customer> search_customer_by_uuid(string uuid);
 
-        void add_taxi(bool hybrid, string id, string manufacturer, int fare_amount, int number);
-        void add_customer(string firstname, string lastname, string uuid, int balance);
+        void insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number);
+        void add_customer(string firstname, string lastname, string uuid, int balance, Status status);
         void add_driver(string firstname, string lastname, string uuid, string dln, Status status);
 
+        void add_taxi_by_id(string id, int num);
+        void remove_taxi_by_id(string id, int num);
 
-        // Getter list funcitons using subscript
+        void delete_driver_user_by_uuid(string uuid);
+        void delete_customer_user_by_uuid(string uuid);
+
         template <typename T>
         vector<T> operator[](string entity);
         template <typename T>
@@ -86,20 +87,17 @@ class TaxiAgency{
         unordered_map<string, int> operator[](string entity);
 
 
-
         int book_taxi(string customer_uuid, string car_id);
 
-        // upgrade capacity
-        // driver promotion
+
+        // TODO
+        void upgrade_agency_assets(int garage_limit, int each_car_limit, int driver_vacancies);
+        void driver_promotion(int new_wage);
         
         void export_taxies(const char* TAXIES_FILE);
-        void export_customer_db(const char* TAXIES_FILE);
-        void export_driver_db(const char* TAXIES_FILE);
+        void export_customer_db(const char* CUSTOMERS_FILE);
+        void export_driver_db(const char* DRIVERS_FILE);
 
-        void export_all();
-        
-        // Customer add_customer(string firstname, string lastname, string uuid, double balance);
-
-        // IndexInstance<> search_by_uuid();
+        void export_all(const char* TAXIES_FILE, const char* CUSTOMERS_FILE, const char* DRIVERS_FILE);
 
 };
