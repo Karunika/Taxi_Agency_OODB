@@ -15,17 +15,17 @@ The motive of the project is to create an Object-oriented Database Model for a T
 ## Usage
 Run the following commands in the app root directory.
 
-```
+```cpp
 make // compile tests
 ./output // run tests
 ```
 
-```
+```cpp
 make reset // compile reset file
 ./output // run reset
 ```
 
-```
+```cpp
 make clean // clean
 ```
 
