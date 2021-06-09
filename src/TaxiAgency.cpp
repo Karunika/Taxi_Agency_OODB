@@ -128,28 +128,37 @@ IndexInstance<Taxi> TaxiAgency::retrieve_taxi_by_id(string id){
     throw invalid_argument("Taxi with the id doesn't exist");
 };
 
-void TaxiAgency::insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number = 1){
-    if(taxies.size() == GarageLimit)
+void TaxiAgency::insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number){
+    if(taxies.size() == GarageLimit+1)
         throw range_error("The limit of garage is reached. Need to upgrade the Agency!");
-    taxies.push_back(Taxi(hybrid, id, manufacturer, fare_amount, number));
+    try{
+        retrieve_taxi_by_id(id);
+        throw ("Taxi with the provided id already exist. Id should be unique.");
+    }catch(invalid_argument){
+        taxies.push_back(Taxi(hybrid, id, manufacturer, fare_amount, number));
+    }
 };
 
-void TaxiAgency::add_taxi_by_id(string id, int num = 1){
+IndexInstance<Taxi> TaxiAgency::add_taxi_by_id(string id, int num){
     IndexInstance<Taxi> taxi = retrieve_taxi_by_id(id);
     if(num < 0)
         throw invalid_argument("Invalid Number provided");
     if(taxi.data->number + num >= EachCarLimit)
-        throw invalid_argument("Number of a certain Taxi shouldn't increase beyond EachCarLimit.");
+        throw range_error("Number of a certain Taxi shouldn't increase beyond EachCarLimit.");
     taxi.data->number += num;
+    return taxi;
 };
 
-void TaxiAgency::remove_taxi_by_id(string id, int num = 1){;
+IndexInstance<Taxi> TaxiAgency::remove_taxi_by_id(string id, int num){;
     IndexInstance<Taxi> taxi = retrieve_taxi_by_id(id);
     if(num < 0)
         throw invalid_argument("Invalid Number provided");
     if(taxi.data->number - num < 0)
-        throw invalid_argument("Not enough taxies to remove.");
+        throw range_error("Not enough taxies to remove.");
     taxi.data->number -= num;
+    if(taxi.data->number == 0)
+        taxies.erase(taxies.begin() + taxi.index);
+    return taxi;
 };
 
 void TaxiAgency::export_taxies(const char* TAXIES_FILE){

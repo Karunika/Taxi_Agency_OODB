@@ -15,17 +15,14 @@ struct assertion_failure : public exception {
 };
 
 template <class T>
-void assert_eq(T val, T assumed_val, string keyword){
+void assert_eq(T val, T assumed_val, const char* keyword = ""){
     if(val != assumed_val){
-        string str = "Test Failed: Assertion \"" + keyword + "\" failure";
-        const char* c = str.c_str();
-        throw assertion_failure(c);
+        throw assertion_failure(keyword);
     }
 };
 
 void test_partition(string test_description, const function<void()>& tests){
-    cout << "-- " << test_description;
-    cout << rang::fg::blue << " - successful" << rang::fg::reset << endl;
+    cout << "-- " << test_description << endl;
     tests();
 };
 

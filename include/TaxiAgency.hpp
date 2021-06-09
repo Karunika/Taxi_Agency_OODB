@@ -70,12 +70,12 @@ class TaxiAgency{
         IndexInstance<Driver> search_driver_by_uuid(string uuid);
         IndexInstance<Customer> search_customer_by_uuid(string uuid);
 
-        void insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number);
+        void insert_new_taxi_breed(bool hybrid, string id, string manufacturer, int fare_amount, int number = 1);
         void add_customer(string firstname, string lastname, string uuid, int balance, Status status);
         void add_driver(string firstname, string lastname, string uuid, string dln, Status status);
 
-        void add_taxi_by_id(string id, int num);
-        void remove_taxi_by_id(string id, int num);
+        IndexInstance<Taxi> add_taxi_by_id(string id, int num = 1);
+        IndexInstance<Taxi> remove_taxi_by_id(string id, int num = 1);
 
         void delete_driver_user_by_uuid(string uuid);
         void delete_customer_user_by_uuid(string uuid);

@@ -16,9 +16,11 @@ int main(){
             cout << endl;
 
             // Populate lists containers with sample CSV data
-            myTaxiAgency.populate_taxies(TAXIES_FILE);
-            myTaxiAgency.populate_customer_db(CUSTOMERS_FILE);
-            myTaxiAgency.populate_drivers_db(DRIVERS_FILE);
+            test_partition("Import CSV data", [&]() {
+                myTaxiAgency.populate_taxies(TAXIES_FILE);
+                myTaxiAgency.populate_customer_db(CUSTOMERS_FILE);
+                myTaxiAgency.populate_drivers_db(DRIVERS_FILE);
+            });
 
 
             print_prompt("Print List?", [&]() {
@@ -43,7 +45,7 @@ int main(){
                     assert_eq(taxi.data->hybrid, true, "First Taxi Details");
                     assert_eq(taxi.data->manufacturer, (string) "Audi", "First Taxi Details");
                     assert_eq(taxi.data->fare_amount, 23, "First Taxi Details");
-                    assert_eq(taxi.data->number, 4, "First Taxi Details");
+                    assert_eq(taxi.data->number, 1, "First Taxi Details");
 
                     taxi = myTaxiAgency.retrieve_taxi_by_id("2011 Chevrolet Express LS 2500");
 
@@ -59,24 +61,94 @@ int main(){
                     assert_eq(taxi.data->fare_amount, 36, "Last Taxi Details");
                     assert_eq(taxi.data->number, 4, "Last Taxi Details");
                 });
+
+                test_partition("-- Taxi Retrieval Exception Handling", [&]() {
+                    try{
+                        myTaxiAgency.retrieve_taxi_by_id("2012 Chevrolet Coloado Work Truck"); // mispelled
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument e){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
             });
 
-            test_partition("Taxi Retrieval Exception Handling", [&]() {
-                try{
-                    myTaxiAgency.retrieve_taxi_by_id("2012 Chevrolet Coloado Work Truck"); // mispelled
-                    cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
-                }catch(invalid_argument e){}catch(...){
-                    cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
-                }
-            });
+            test_partition("Insert New Taxi", [&]() {
+                myTaxiAgency.insert_new_taxi_breed(true, "2010 Volvo XC60 3.2", "Volvo", 14, 4);
+                myTaxiAgency.insert_new_taxi_breed(true, "2011 Volvo XC70 3.2", "Volvo", 20);
+                test_partition("-- Insert Taxi with repeated id", [&]() {
+                    try{
+                        myTaxiAgency.insert_new_taxi_breed(true, "2011 Volvo XC70 3.2", "Volvo", 20, 2);
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(...){}
+                });
+                myTaxiAgency.insert_new_taxi_breed(true, "2011 Volvo XC70 T6 AWD", "Volvo", 20, 3);
+                myTaxiAgency.insert_new_taxi_breed(true, "2010 Volvo XC70 T6 AWD", "Volvo", 20);
+                myTaxiAgency.insert_new_taxi_breed(true, "2010 Volvo XC70 3.2", "Volvo", 20, 2);
+                test_partition("-- Taxi Limit exceeded", [&]() {
+                    try{
+                        myTaxiAgency.insert_new_taxi_breed(true, "2011 Toyota 4Runner SR5", "Toyota", 20, 2);
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(range_error e){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Increase existing Taxi count", [&]() {
+                    assert_eq(myTaxiAgency.add_taxi_by_id("2009 Audi A3 3.2").data->number, 2, "First Taxi count increased");
+                    assert_eq(myTaxiAgency.add_taxi_by_id("2010 Volvo XC70 3.2").data->number, 3, "Last Taxi count increased");
+                    assert_eq(myTaxiAgency.add_taxi_by_id("2011 Chevrolet Colorado Work Truck", 2).data->number, 3, "Last Taxi count increased");
 
+                    test_partition("-- -- Taxi count range Exception", [&]() {
+                        try{
+                            myTaxiAgency.add_taxi_by_id("2011 Chevrolet Colorado Crew Cab 1LT");
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(range_error){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                        try{
+                            myTaxiAgency.add_taxi_by_id("2011 Chevrolet Express LS 1500", 3);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(range_error){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                    test_partition("-- -- Invalid increase factor Exception", [&]() {
+                        try{
+                            myTaxiAgency.add_taxi_by_id("2011 Chevrolet Colorado Crew Cab 1LT", -3);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(invalid_argument){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                });
+            });
+            test_partition("Decrease existing Taxi count", [&]() {
+                assert_eq(myTaxiAgency.remove_taxi_by_id("2009 Audi A3 2.0 T AT").data->number, 3, "Second Taxi count decreased");
+                test_partition("-- Taxi count range below zero", [&]() {
+                    try{
+                        myTaxiAgency.remove_taxi_by_id("2009 Audi A4 Sedan 2.0 T Quattro", 5);
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(range_error){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Deleting existing Taxi", [&]() {
+                    assert_eq(myTaxiAgency.retrieve_taxi_by_id("2012 Acura TL SH-AWD").data->number, 2, "Count Decreament Deletion");
+                    myTaxiAgency.remove_taxi_by_id("2012 Acura TL SH-AWD", 2);
+                    try{
+                        myTaxiAgency.retrieve_taxi_by_id("2012 Acura TL SH-AWD");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+            });
 
 
             test_partition("Creating & Inserting User", [&]() {
-                test_partition("-- Add Customer", [&]() {
-                    myTaxiAgency.add_customer("Ireneusz", "Brajan", "Ireneusz", 46, IDOL);
-                    myTaxiAgency.add_customer("Pawel", "Dobroslawa", "pawel_dobro", 52, IDOL);
-                });
+                // test_partition("-- Add Customer", [&]() {
+                //     myTaxiAgency.add_customer("Ireneusz", "Brajan", "Ireneusz", 46, IDOL);
+                //     myTaxiAgency.add_customer("Pawel", "Dobroslawa", "pawel_dobro", 52, IDOL);
+                // });
                 test_partition("-- Add Driver", [&]() {
                     myTaxiAgency.add_driver("Pawel", "Natalka", "pawe_nata", "2019/1858358850", IDOL);
                 });
@@ -104,6 +176,8 @@ int main(){
         cout << rang::fg::green << "Tests successful!" << endl;
 
 
+    }catch(assertion_failure& e){
+        cout << rang::fg::red << "Test Failed: Assertion \"" << e.what() << "\" failure" << endl;
     }catch(std::exception& e){
         cout << rang::fg::red << e.what() << endl;
     }
