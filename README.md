@@ -38,31 +38,25 @@ make clean // clean
 ## Class Design
 
 Classes:
- * [Taxi Agency](#taxi-agency)
- * [User](#user)
-   * [Customer](#customer)
-   * [Driver](#driver)
- * [Taxi](#taxi)
- * [Shift](#shift)
+ * Taxi Agency
+ * User
+   * Customer
+   * Driver
+ * Taxi
+ * Shift
 
 Standard Template Library Classes used:
- * [vector<T>](#vector)
- * [list<T>](#vector)
- * [unordered_map<T1, T2>](#vector)
+ * vector<T>
+ * list<T>
+ * unordered_map<T1, T2>
 
-### Taxi Agency
-An instance of Taxi Agency class behaves like a container to the list of all the entities (Driver, Customer, Taxi, Shift (ongoing, history)). It stores basic stats like limits of the Agency (based on budget, which can be upgraded upon investment), employee vacancies, ongoing shifts, etc. It also maintains a record of the history of shifts.
 
-Destruction of a Taxi Agency instance leads to the destruction of all the containers contained in it, thus, all the instances of the User, Customer, Taxi and Shift classes.
-
-### User
-All the users registered with the Taxi Agency. It uses `uuid` as its primary key. `Customer` class and `Driver` class inherits `User` class.
-
-### Taxi
-Holds data about the Taxi. Each record can represents a breed of Taxi and an Agency can own more than one car of a certain breed.
-
-### Shift
-Holds information about a certaing booking, which can be made by a customer.
+|Class|Description|
+|-----|-----------|
+|Taxi Agency|An instance of Taxi Agency class behaves like a container to the list of all the entities (Driver, Customer, Taxi, Shift (ongoing, history)). It stores basic stats like limits of the Agency (based on budget, which can be upgraded upon investment), employee vacancies, ongoing shifts, etc. It also maintains a record of the history of shifts.Destruction of a Taxi Agency instance leads to the destruction of all the containers contained in it, thus, all the instances of the User, Customer, Taxi and Shift classes.|
+|User|All the users registered with the Taxi Agency. It uses `uuid` as its primary key. `Customer` class and `Driver` class inherits `User` class.|
+|Taxi|Holds data about the Taxi. Each record can represents a breed of Taxi and an Agency can own more than one car of a certain breed.|
+|Shift|Holds information about a certaing booking, which can be made by a customer.|
 
 ## Testing
 The test relies on an initial static CSV data, which has been provided in the relative path `./data/sample`. However, the test only alters the CSV files present in `./data`. <br />
