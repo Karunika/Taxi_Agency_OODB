@@ -1,7 +1,7 @@
 # Taxi Agency
 
  * [Introduction](#Introduction)
- * [Usage](#Introduction)
+ * [Usage](#Usage)
  * [About](#About)
    * [Class Design](#Class-Design)
    * [Testing](#Testing)
