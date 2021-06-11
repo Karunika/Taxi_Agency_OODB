@@ -82,8 +82,9 @@ class TaxiAgency{
         void import_current_shifts(const char* CURRENT_SHIFTS_FILE);
         void import_shift_history(const char* SHIFT_HISTORY_FILE);
         void book_taxi(string customer_uuid, string car_id);
+        void extend_shift_tenure(string customer_uuid, int running_hours = 12, int waiting_hours = 12);
         Shift retrieve_shift_details_by_customer(string customer_uuid);
-        void end_shift(string customer_uuid, int running_hours = 12, int waiting_hours = 12);
+        void end_shift(string customer_uuid);
 
         void upgrade_agency_assets(int garage_limit, int each_car_limit, int driver_vacancies);
         void driver_promotion(int new_wage);

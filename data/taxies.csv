@@ -4,7 +4,7 @@
 "True","2009 Audi A3 2.0 T","Audi",6,4,4
 "True","2009 Audi A3 2.0 T Quattro","Audi",6,4,4
 "True","2009 Audi A5 3.2","Audi",8,4,4
-"True","2009 Audi A5 3.2 AT","Audi",9,4,3
+"True","2009 Audi A5 3.2 AT","Audi",9,4,0
 "True","2009 Audi Q7 4.2","Audi",6,4,4
 "True","2009 Audi Q7 3.6","Audi",4,4,4
 "True","2009 Audi A4 Sedan 2.0 T Quattro","Audi",52,4,4
@@ -17,7 +17,7 @@
 "True","2011 BMW X6 M","BMW",32,4,4
 "True","2012 Chevrolet Colorado Work Truck","Chevrolet",34,4,4
 "True","2012 Chevrolet Colorado Extended Cab Work Truck","Chevrolet",24,4,4
-"True","2012 Chevrolet Colorado Crew Cab 1LT","Chevrolet",25,4,4
+"True","2012 Chevrolet Colorado Crew Cab 1LT","Chevrolet",10,4,3
 "True","2011 Chevrolet Colorado Work Truck","Chevrolet",19,3,3
 "True","2011 Chevrolet Colorado Extended Cab Work Truck","Chevrolet",29,4,4
 "True","2011 Chevrolet Colorado Crew Cab 1LT","Chevrolet",29,4,4
@@ -31,7 +31,7 @@
 "True","2011 Chevrolet Express LS 2500","Chevrolet",32,4,4
 "True","2011 Chevrolet Express LS 2500 6.0L","Chevrolet",36,4,4
 "True","2010 Chevrolet Express LS 1500","Chevrolet",36,4,4
-"True","2010 Chevrolet Express LS 1500 AWD","Chevrolet",36,4,4
+"True","2010 Chevrolet Express LS 1500 AWD","Chevrolet",6,4,3
 "True","2011 Chevrolet Silverado 1500 Work Truck","Chevrolet",36,4,4
 "True","2011 Chevrolet Silverado 1500 Crew Cab Work Truck","Chevrolet",36,4,4
 "True","2011 Chevrolet Silverado 1500 Extended Cab Work Truck","Chevrolet",36,4,4
@@ -53,7 +53,7 @@
 "True","2010 Volvo S80 T6 AWD","Volvo",32,1,1
 "True","2010 Volvo S80 3.2","Volvo",14,1,1
 "True","2011 Volvo V50 T5","Volvo",20,1,1
-"True","2010 Volvo V50 R-Design","Volvo",20,1,1
+"True","2010 Volvo V50 R-Design","Volvo",8,1,0
 "True","2010 Volvo V50 2.4i","Volvo",46,4,4
 "True","2011 Volvo XC60 T6 AWD","Volvo",59,2,2
 "True","2011 Volvo XC60 3.2","Volvo",20,3,3

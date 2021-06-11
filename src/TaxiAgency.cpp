@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <ctime>
 
 #include "../include/TaxiAgency.hpp"
 
@@ -15,8 +16,8 @@ using namespace std;
 int Taxi::TaxiAttributesCount = 6;
 int Customer::CustomerDetailsCount = 5;
 int Driver::DriverAttributesCount = 6;
-int Shift::ShiftAttributesCount = 3;
-int Shift::HistoryShiftAttributesCount = 6;
+int Shift::ShiftAttributesCount = 5;
+int Shift::HistoryShiftAttributesCount = 8;
 int User::MaxUUIDLength = 32;
 int User::MaxNameLength = 256;
 
@@ -260,6 +261,7 @@ void TaxiAgency::delete_customer_user_by_uuid(string uuid){
 };
 
 void TaxiAgency::export_customer_db(const char* CUSTOMERS_FILE){
+    srand(time(NULL));
     ofstream File;
     File.open(CUSTOMERS_FILE);
     if(File.is_open()){
@@ -370,7 +372,9 @@ void TaxiAgency::import_current_shifts(const char* CURRENT_SHIFTS_FILE){
             populate_fields(t, fields, Shift::ShiftAttributesCount);
             shift = Shift(fields[0].substr(0, fields[0].length()-2),
                         fields[1].substr(1, fields[1].length()-2),
-                        fields[2].substr(1, fields[2].length()-2));
+                        fields[2].substr(1, fields[2].length()-2),
+                        stoi(fields[3]),
+                        stoi(fields[4]));
 
             current_shifts.push_back(shift);
         }
@@ -394,7 +398,9 @@ void TaxiAgency::import_shift_history(const char* SHIFT_HISTORY_FILE){
                         fields[2].substr(1, fields[2].length()-2),
                         stoi(fields[3]),
                         stoi(fields[4]),
-                        stoi(fields[5]));
+                        stoi(fields[5]),
+                        stoi(fields[6]),
+                        stoi(fields[7]));
 
             shift_history.push_back(shift);
         }
@@ -412,7 +418,9 @@ void TaxiAgency::export_shift_history(const char* SHIFT_HISTORY_FILE){
         for(list<Shift>::iterator shift = shift_history.begin(); shift != shift_history.end(); ++shift){
             File << "\"" << shift->getCustomerUUID() << "\",";
             File << "\"" << shift->getDriverUUID() << "\",";
-            File << "\"" << shift->getCarID() << ",\"";
+            File << "\"" << shift->getCarID() << "\",";
+            File << shift->getFareAmount() << ",";
+            File << shift->getWaitingCharges() << ",";
             File << shift->getRunningHours() << ",";
             File << shift->getWaitingHours() << ",";
             File << shift->getTotalCost() << "\n";
@@ -432,6 +440,8 @@ void TaxiAgency::export_ongoing_shifts(const char* CURRENT_SHIFTS_FILE){
             File << "\"" << shift->getCustomerUUID() << "\",";
             File << "\"" << shift->getDriverUUID() << "\",";
             File << "\"" << shift->getCarID() << "\"";
+            File << shift->getFareAmount() << ",";
+            File << shift->getWaitingCharges() << "\n";
         }
         File.close();
     }else{
@@ -448,7 +458,6 @@ void TaxiAgency::book_taxi(string customer_uuid, string car_id){
     }catch(invalid_argument e){
         throw booking_unsuccessful("Invalid Taxi id");
     };
-    taxi.data->available_number--;
     
     IndexInstance<Customer> customer = search_customer_by_uuid(customer_uuid);
     if(customer.data->getStatus() == ONSHIFT)
@@ -457,19 +466,35 @@ void TaxiAgency::book_taxi(string customer_uuid, string car_id){
     if(customer.data->getBalance() < 12*taxi.data->fare_amount + 12*WaitingCharges)
         throw booking_unsuccessful("Not enough balance to book a Taxi");
 
-    customer.data->toggle_customer_status();
 
     string driver_uuid;
     for(int i = 0; i < driver_db.size(); i++){
         if(driver_db[i].getStatus() == IDLE){
+            taxi.data->available_number--;
+            customer.data->toggle_customer_status();
             driver_uuid = driver_db[i].getUUID();
             driver_db[i].toggle_driver_status();
-            Shift shift(customer_uuid, driver_uuid, car_id);
+            Shift shift(customer_uuid, driver_uuid, car_id, taxi.data->fare_amount, WaitingCharges);
+            shift.extend_tenure(12, 12);
             current_shifts.push_back(shift);
             return;
         }
     }
     throw booking_unsuccessful("Running out of drivers.");
+};
+
+void TaxiAgency::extend_shift_tenure(string customer_uuid, int del_running_hours, int del_waiting_hours){
+    for(list<Shift>::iterator i = current_shifts.begin(); i != current_shifts.end(); ++i)
+        if(i->getCustomerUUID() == customer_uuid){
+            IndexInstance<Taxi> taxi = retrieve_taxi_by_id(i->getCarID());
+            int del_total_cost = del_running_hours*taxi.data->fare_amount + del_waiting_hours*WaitingCharges;
+            if(search_customer_by_uuid(customer_uuid).data->getBalance() < i->getTotalCost()+del_total_cost)
+                throw booking_unsuccessful("Not enough balance to increase the shift tenure");
+
+            i->extend_tenure(del_running_hours, del_waiting_hours);
+            return;
+        }
+    throw invalid_argument("Customer with the supplied UUID is IDLE");
 };
 
 Shift TaxiAgency::retrieve_shift_details_by_customer(string customer_uuid){
@@ -479,14 +504,11 @@ Shift TaxiAgency::retrieve_shift_details_by_customer(string customer_uuid){
     throw ("Customer with the supplied UUID is IDLE");
 };
 
-void TaxiAgency::end_shift(string customer_uuid, int running_hours, int waiting_hours){
+void TaxiAgency::end_shift(string customer_uuid){
     for(list<Shift>::iterator i = current_shifts.begin(); i != current_shifts.end(); ++i)
         if(i->getCustomerUUID() == customer_uuid){
             IndexInstance<Taxi> taxi = retrieve_taxi_by_id(i->getCarID());
-            int total_cost = running_hours*taxi.data->fare_amount + waiting_hours*WaitingCharges;
-            i->setRunningHours(running_hours);
-            i->setWaitingHours(waiting_hours);
-            i->setTotalCost(total_cost);
+            int total_cost = i->getRunningHours()*taxi.data->fare_amount + i->getWaitingHours()*WaitingCharges;
             shift_history.push_back(*i);
             current_shifts.erase(i);
             search_customer_by_uuid(customer_uuid).data->makeTransaction(total_cost);

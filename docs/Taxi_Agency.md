@@ -1,6 +1,6 @@
 # Taxi Agency
 
-### Function Descriptions:
+## Member Function Descriptions:
 
 ```cpp
 TaxiAgency(); 
@@ -180,12 +180,17 @@ void book_taxi(string customer_uuid, string car_id);
 Instantiates a brand new Shift based on the request of a customer, whose `uuid` has to be provided as the first argument followed by the `id` of car being demanded. If the car `id` is invalid or no drivers are available or the customer doesn't have enough balance, an exception is thrown. Thereafter, the status of the customer is toggled to `ONSHIFT`.
 
 ```cpp
+void extend_shift_tenure(string customer_uuid, int del_running_hours = 12, int del_waiting_hours = 12)
+```
+Increase the `Running hours` and `Waiting Hours` of the of the shift corresponding to the customer with provided `uuid`.
+
+```cpp
 Shift retrieve_shift_details_by_customer(string customer_uuid);
 ```
 Returns an `Shift` object of the shift corresponding to the customer with provided `uuid`.
 
 ```cpp
-void end_shift(string customer_uuid, int running_hours = 12, int waiting_hours = 12);
+void end_shift(string customer_uuid);
 ```
 A shift is bought to an end, and the customer is asked to make transaction.
 
@@ -193,6 +198,11 @@ A shift is bought to an end, and the customer is asked to make transaction.
 void print_ongoing_shifts();
 ```
 Prints a list of all the ongoing shifts along with its details i.e., the customer who booked it, the driver in charge, and the Taxi in use.
+
+```cpp
+void print_shift_history();
+```
+Prints a list of all the shifts taken placce in the past along with its details.
 
 
 ## Other Methods

@@ -32,11 +32,12 @@ make clean // clean
 ## About
 <img src="./assets/UML.png">
 
+[Read Docs](./docs) <br />
 [Project Config](config.yaml)
 
 ## Class Design
 
-Custom Classes:
+Classes:
  * [Taxi Agency](#taxi-agency)
  * [User](#user)
    * [Customer](#customer)

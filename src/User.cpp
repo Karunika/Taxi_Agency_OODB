@@ -22,6 +22,9 @@ struct invalid_name : public exception {
 };
 
 static void validate_uuid(string uuid){
+    if(uuid.length() < 3){
+        throw out_of_range("UUID should have a minimum of 3 characters");
+    }
     if(uuid.length() > User::MaxUUIDLength){
         throw out_of_range("UUID max character limit exceeded");
     }

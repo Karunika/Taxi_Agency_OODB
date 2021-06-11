@@ -11,19 +11,17 @@ using namespace std;
 int main(){
     try{
         {
-
             TaxiAgency myTaxiAgency;
             cout << endl;
 
-            // Populate lists containers with sample CSV data
             test_partition("Import CSV data", [&]() {
                 myTaxiAgency.populate_taxies(TAXIES_FILE);
                 myTaxiAgency.populate_customer_db(CUSTOMERS_FILE);
                 myTaxiAgency.populate_drivers_db(DRIVERS_FILE);
             });
-
-            print_prompt("Print List?", [&]() {
-                test_partition("Printing Lists", [&]() {
+            
+            test_partition("Print Lists?", [&]() {
+                print_prompt("Print List?", [&]() {
                     myTaxiAgency.print_taxies();
                     myTaxiAgency.print_customer_db();
                     myTaxiAgency.print_drivers_db();
@@ -120,7 +118,7 @@ int main(){
                     });
                 });
             });
-            
+
             test_partition("Decrease existing Taxi count", [&]() {
                 assert_eq(myTaxiAgency.remove_taxi_by_id("2009 Audi A3 2.0 T AT").data->number, 3, "Second Taxi count decreased");
                 test_partition("-- Taxi count range below zero", [&]() {
@@ -158,21 +156,21 @@ int main(){
 
                         assert_eq(customer.data->getFirstname(), (string) "Iwona", "First Customer Details");
                         assert_eq(customer.data->getLastname(), (string) "Wislawa", "First Customer Details");
-                        assert_eq(customer.data->getBalance(), 46, "First Customer Details");
+                        assert_eq(customer.data->getBalance(), 561, "First Customer Details");
                         assert_eq(customer.data->getStatus(), IDLE, "First Customer Details");
 
                         customer = myTaxiAgency.search_customer_by_uuid("behind_you218");
 
                         assert_eq(customer.data->getFirstname(), (string) "Wlodek", "Middle Customer Details");
                         assert_eq(customer.data->getLastname(), (string) "Jagoda", "Middle Customer Details");
-                        assert_eq(customer.data->getBalance(), 56, "Middle Customer Details");
+                        assert_eq(customer.data->getBalance(), 556, "Middle Customer Details");
                         assert_eq(customer.data->getStatus(), IDLE, "Middle Customer Details");
                     
                         customer = myTaxiAgency.search_customer_by_uuid("zula_bula");
 
                         assert_eq(customer.data->getFirstname(), (string) "Natasza", "Last Customer Details");
                         assert_eq(customer.data->getLastname(), (string) "Zula", "Last Customer Details");
-                        assert_eq(customer.data->getBalance(), 46, "Last Customer Details");
+                        assert_eq(customer.data->getBalance(), 887, "Last Customer Details");
                         assert_eq(customer.data->getStatus(), IDLE, "Last Customer Details");
                     });
                     test_partition("-- -- Customer Retrieval Exception Handling", [&]() {
@@ -229,16 +227,16 @@ int main(){
 
             test_partition("Creating & Inserting User", [&]() {
                 test_partition("-- Inserting new Customer", [&]() {
-                    myTaxiAgency.add_customer("Antonina", "Jolanta", "Aaantonio1", 245);
+                    myTaxiAgency.add_customer("Antonina", "Jolanta", "Aaantonio1", 879);
                     myTaxiAgency.add_customer("Waleria", "Anastazy", "Waleria");
-                    myTaxiAgency.add_customer("Ziemowit", "Izabela", "Ziemowit_", 245, IDLE);
+                    myTaxiAgency.add_customer("Ziemowit", "Izabela", "Ziemowit_", 546, IDLE);
                     test_partition("-- -- Customer with invalid Registration Details", [&]() {
                         try{
-                            myTaxiAgency.add_customer("Franciszka", "Sonia", "<Son!a>", 245, IDLE);
+                            myTaxiAgency.add_customer("Franciszka", "Sonia", "<Son!a>", 346, IDLE);
                             cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                         }catch(...){};
                         try{
-                            myTaxiAgency.add_customer("Eustachy", "Ida", "Ida__#_", 245, IDLE);
+                            myTaxiAgency.add_customer("Eustachy", "Ida", "Ida__#_", 980, IDLE);
                             cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                         }catch(...){};
                         try{
@@ -246,7 +244,7 @@ int main(){
                             cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                         }catch(...){};
                         try{
-                            myTaxiAgency.add_customer("Mirek", "Radz\\im", "Mirek", 245, IDLE);
+                            myTaxiAgency.add_customer("Mirek", "Radz\\im", "Mirek", 345, IDLE);
                             cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                         }catch(...){};
                     });
@@ -258,8 +256,8 @@ int main(){
                             cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                         }
                     });
-                    myTaxiAgency.add_customer("Jaroslawa", "Mariusz", "Mariusz", 89);
-                    myTaxiAgency.add_customer("Kunegunda", "Fryderyka", "fryderyka7", 245, IDLE);
+                    myTaxiAgency.add_customer("Jaroslawa", "Mariusz", "Mariusz", 189);
+                    myTaxiAgency.add_customer("Kunegunda", "Fryderyka", "fryderyka7", 235, IDLE);
                     test_partition("-- -- Capacity to server customer exceeded", [&]() {
                         try{
                             myTaxiAgency.add_customer("Miloslaw", "Dymitr", "miloslaw", 245, IDLE);
@@ -364,8 +362,80 @@ int main(){
 
             test_partition("Booking Taxi", [&]() {
                 myTaxiAgency.book_taxi("Renata", "2009 Audi A5 3.2 AT");
+                assert_eq(myTaxiAgency.retrieve_taxi_by_id("2009 Audi A5 3.2 AT").data->available_number, 3);
+                test_partition("-- Re-Booking Taxi Exception", [&]() {
+                    try{
+                        myTaxiAgency.book_taxi("Renata", "2011 BMW X6 M");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(booking_unsuccessful){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Booking without enough Balance", [&]() {
+                    try{
+                        myTaxiAgency.book_taxi("Ireneusz", "2009 Audi A5 3.2 AT");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(booking_unsuccessful){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Booking instigated by an unregistered Customer", [&]() {
+                    try{
+                        myTaxiAgency.book_taxi("AlkaBalka", "2011 BMW X6 M");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                myTaxiAgency.book_taxi("JJJJ8888", "2009 Audi A5 3.2 AT");
+                assert_eq(myTaxiAgency.retrieve_taxi_by_id("2009 Audi A5 3.2 AT").data->available_number, 2);
+                myTaxiAgency.book_taxi("Aaantonio1", "2009 Audi A5 3.2 AT");
+                myTaxiAgency.book_taxi("fryderyka7", "2009 Audi A5 3.2 AT");
+                test_partition("-- Booking an Unavailable Taxi", [&]() {
+                    try{
+                        myTaxiAgency.book_taxi("8brunomars", "2009 Audi A5 3.2 AT");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(booking_unsuccessful){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Providing an Invalid Taxi Id", [&]() {
+                    try{
+                        myTaxiAgency.book_taxi("8brunomars", "2012 ura TL"); // mispelled
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(booking_unsuccessful){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                myTaxiAgency.book_taxi("Roland_o_o_o_", "2012 Chevrolet Colorado Crew Cab 1LT");
+                myTaxiAgency.book_taxi("_get_me_", "2010 Chevrolet Express LS 1500 AWD");
+                myTaxiAgency.book_taxi("ilona", "2010 Volvo V50 R-Design");
+            });
+
+            test_partition("Printing Ongoing Shifts", [&]() {
+                print_prompt("Print a list of Ongoing Shifts?", [&]() {
+                    myTaxiAgency.print_ongoing_shifts();
+                });
+            });
+
+            test_partition("Extending Shift Tenure", [&]() {
+                myTaxiAgency.extend_shift_tenure("ilona");
+                myTaxiAgency.extend_shift_tenure("ilona", 2, 4);
+                myTaxiAgency.extend_shift_tenure("Roland_o_o_o_", 1, 2);
+                myTaxiAgency.extend_shift_tenure("_get_me_", 4, 6);
+            });
+
+            test_partition("Closing Shifts", [&]() {
                 myTaxiAgency.end_shift("Renata");
-                // myTaxiAgency.print_shift_history();
+                myTaxiAgency.end_shift("Roland_o_o_o_");
+                myTaxiAgency.end_shift("_get_me_");
+                myTaxiAgency.end_shift("ilona");
+            });
+
+            test_partition("Printing Shift History", [&]() {
+                print_prompt("Print a Record of all Shifts?", [&]() {
+                    myTaxiAgency.print_shift_history();
+                });
             });
 
             test_partition("Upgrade Taxi Agency", [&]() {
@@ -382,8 +452,26 @@ int main(){
 
             cout << endl;
         } // End of scope to trigger the destructure
-        
-        
+
+        {
+            TaxiAgency myTaxiAgency;
+            cout << endl;
+
+            test_partition("Import Shift CSV Data", [&]() {
+                myTaxiAgency.import_current_shifts(CURRENT_SHIFTS_FILE);
+                myTaxiAgency.import_shift_history(SHIFT_HISTORY_FILE); // fine
+            });
+
+            test_partition("Printing Shift Lists", [&]() {
+                print_prompt("Print List?", [&]() {
+                    myTaxiAgency.print_ongoing_shifts();
+                    myTaxiAgency.print_shift_history();
+                });
+            });
+
+            cout << endl;
+        }
+
         cout << rang::fg::green << "Tests successful!" << endl;
 
 
