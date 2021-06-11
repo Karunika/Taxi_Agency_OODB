@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Customer::Customer(string firstname, string lastname, string uuid, int balance = 0, Status status = IDOL)
+Customer::Customer(string firstname, string lastname, string uuid, int balance = 0, Status status = IDLE)
     : User(firstname, lastname, uuid),
     balance(balance), status(status){
 
@@ -18,7 +18,7 @@ ostream& operator<<(ostream& output, const Customer& C){
         "\n\t\tfirstname : " << C.firstname <<
         "\n\t\tlastname : " << C.lastname <<
         "\n\t\tbalance : " << C.balance <<
-        "\n\t\tstatus : " << (C.status == IDOL ? "IDOL" : "ONSHIFT") <<
+        "\n\t\tstatus : " << (C.status == IDLE ? "IDLE" : "ONSHIFT") <<
         "\n\t}" <<
         endl;
     return output;
@@ -29,10 +29,14 @@ void Customer::print(){
 };
 
 void Customer::toggle_customer_status(){
-    if(status == IDOL)
+    switch (status){
+    case IDLE:
         status = ONSHIFT;
-    if(status == ONSHIFT)
-        status = IDOL;
+        break;
+    case ONSHIFT:
+        status = IDLE;
+        break;
+    }
 };
 
 Status Customer::getStatus(){
@@ -41,4 +45,8 @@ Status Customer::getStatus(){
 
 int Customer::getBalance(){
     return balance;
+};
+
+void Customer::makeTransaction(int amount){
+    balance -= amount;
 };

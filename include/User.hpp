@@ -6,7 +6,7 @@ using namespace std;
 
 enum Status{
     ONSHIFT,
-    IDOL
+    IDLE
 };
 
 class User {
@@ -16,9 +16,9 @@ class User {
         string uuid;
     public:
         static int MaxUUIDLength;
+        static int MaxNameLength;
         User();
         User(string firstname, string lastname, string uuid);
-        void validate_uuid(string uuid);
 
         string getFirstname(){ return firstname; };
         string getLastname(){ return lastname; };

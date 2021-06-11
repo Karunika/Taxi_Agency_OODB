@@ -5,7 +5,6 @@
  * [About](#About)
    * [Class Design](#Class-Design)
    * [Testing](#Testing)
-   * [Features & Examples](#features-examples)
  * [Dependencies](#Dependencies)
 
 
@@ -31,14 +30,6 @@ make clean // clean
 
 
 ## About
-Yet to be done.
-<!-- 
-Service:
-When customer books a taxi:
- * When taxi is still, the customer is charged per time the driver is waiting,
- * When taxi is moving, the customer is charged per km  -->
-
-
 <img src="./assets/UML.png">
 
 [Project Config](config.yaml)
@@ -58,19 +49,19 @@ Standard Template Library Classes used:
  * [list<T>](#vector)
  * [unordered_map<T1, T2>](#vector)
 
-<!-- ### Taxi Agency
-An instance of Taxi Agency class behaves like a container to the list of all the entities (Driver, Customer, Taxi, Shift (ongoing, history)). It also stores basic stats like limits of the Agency (based on budget, which can be upgraded upon investment), employee vacancies, ongoing shifts, etc. It also maintains a record of the history of shifts.
+### Taxi Agency
+An instance of Taxi Agency class behaves like a container to the list of all the entities (Driver, Customer, Taxi, Shift (ongoing, history)). It stores basic stats like limits of the Agency (based on budget, which can be upgraded upon investment), employee vacancies, ongoing shifts, etc. It also maintains a record of the history of shifts.
 
 Destruction of a Taxi Agency instance leads to the destruction of all the containers contained in it, thus, all the instances of the User, Customer, Taxi and Shift classes.
 
-Note:
-Taxi Agency stores a record of only its customer, employee and driver. Deleting their instance does not infer at deleting their existance.
-
 ### User
-User reflects an ideal. Uses the concept of unique `uuid`s, allowing and efficient retrieval of data.
+All the users registered with the Taxi Agency. It uses `uuid` as its primary key. `Customer` class and `Driver` class inherits `User` class.
 
- * Customer
- * Driver -->
+### Taxi
+Holds data about the Taxi. Each record can represents a breed of Taxi and an Agency can own more than one car of a certain breed.
+
+### Shift
+Holds information about a certaing booking, which can be made by a customer.
 
 ## Testing
 The test relies on an initial static CSV data, which has been provided in the relative path `./data/sample`. However, the test only alters the CSV files present in `./data`. <br />

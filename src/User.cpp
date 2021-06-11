@@ -4,7 +4,24 @@
 
 using namespace std;
 
-void User::validate_uuid(string uuid){
+struct invalid_uuid : public exception {
+    const char* msg;
+    invalid_uuid(const char* msg) : msg(msg){
+    };
+    const char * what () const throw () {
+        return msg;
+    }
+};
+struct invalid_name : public exception {
+    const char* msg;
+    invalid_name(const char* msg) : msg(msg){
+    };
+    const char * what () const throw () {
+        return msg;
+    }
+};
+
+static void validate_uuid(string uuid){
     if(uuid.length() > User::MaxUUIDLength){
         throw out_of_range("UUID max character limit exceeded");
     }
@@ -13,7 +30,20 @@ void User::validate_uuid(string uuid){
         if(isalnum(uuid[i]) || uuid[i] == '_'){
             i++;
         }else{
-            throw ("Invalid UUID: only alphanumeric [a-zA-Z0-9_] characters are allowed");
+            throw invalid_uuid("Invalid UUID: only alphanumeric [a-zA-Z0-9_] characters are allowed");
+        };
+    }
+};
+static void validate_name(string name){
+    if(name.length() > User::MaxNameLength){
+        throw out_of_range("Name max character limit exceeded");
+    }
+    int i = 0;
+    while(i < name.length()){
+        if(isalpha(name[i])){
+            i++;
+        }else{
+            throw invalid_name("Invalid Name: only standard english alphabets are allowed");
         };
     }
 };
@@ -27,6 +57,8 @@ User::User(string firstname, string lastname, string uuid)
     uuid(uuid)
 {
     validate_uuid(uuid);
+    validate_name(firstname);
+    validate_name(lastname);
 };
 
 string User::updateFirstname(string firstname){

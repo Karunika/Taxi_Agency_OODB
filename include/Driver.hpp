@@ -8,15 +8,13 @@ using namespace std;
 
 class Driver : public User{
     private:
-        string driving_license_num;
-        // ID number or alphanumeric code usually found on a government-issued license
-        
+        string driving_license_num;        
         Status status;
     public:
         static int DriverAttributesCount;
 
         Driver(){};
-        Driver(string firstname, string lastname, string uuid, string dln, Status status);
+        Driver(string firstname, string lastname, string uuid, string dln, Status status = IDLE);
 
         string getDLN();
         Status getStatus();

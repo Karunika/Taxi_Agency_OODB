@@ -32,6 +32,8 @@ class Customer : public User{
 
         Status getStatus();
         int getBalance();
+
+        void makeTransaction(int amount);
         
         void toggle_customer_status();
 };

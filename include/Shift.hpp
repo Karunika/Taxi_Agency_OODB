@@ -1,29 +1,39 @@
 #pragma once
 #include <iostream>
-#include <chrono>
 #include <cmath>
 
-#include "./Taxi.hpp"
-#include "./Driver.hpp"
+using namespace std;
 
 class Shift{
     private:
-        bool running;
-        long time_limit;
-        long kms_rode;
-
-        Taxi car;
-
-        // uuids
-        string driver_in_charge_uuid;
         string customer_uuid;
+        string driver_in_charge_uuid;
+        string car_id;
 
-        int driver_idol_cost;
-
+        unordered_map<string, int> history_stats = {
+            {"running_hours", 0},
+            {"waiting_hours", 0},
+            {"total_cost", 0},
+        };
     public:
-        Shift();
-        Shift(string customer_uuid, string dirver_in_charge_uuid);
+        static int ShiftAttributesCount;
+        static int HistoryShiftAttributesCount;
         
-        void clockIn();
-        void clockOut();
+        Shift(){};
+        Shift(string customer_uuid, string driver_in_charge_uuid, string taxi_id);
+        Shift(string customer_uuid, string driver_in_charge_uuid, string taxi_id, int running_hours, int waiting_hours, int total_cost);
+
+        const string& getCustomerUUID() const;
+        const string& getDriverUUID() const;
+        const string& getCarID() const;
+        const int& getRunningHours() const;
+        const int& getWaitingHours() const;
+        const int& getTotalCost() const;
+
+        void setRunningHours(int running_hours);
+        void setWaitingHours(int waiting_hours);
+        void setTotalCost(int total_cost);
+
+        friend ostream& operator<<(ostream& output, const Shift& S);
+        void print_shift();
 };

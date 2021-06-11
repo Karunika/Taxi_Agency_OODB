@@ -11,7 +11,7 @@ using namespace std;
 int main(){
     try{
         {
-            
+
             TaxiAgency myTaxiAgency;
             cout << endl;
 
@@ -21,7 +21,6 @@ int main(){
                 myTaxiAgency.populate_customer_db(CUSTOMERS_FILE);
                 myTaxiAgency.populate_drivers_db(DRIVERS_FILE);
             });
-
 
             print_prompt("Print List?", [&]() {
                 test_partition("Printing Lists", [&]() {
@@ -44,7 +43,7 @@ int main(){
 
                     assert_eq(taxi.data->hybrid, true, "First Taxi Details");
                     assert_eq(taxi.data->manufacturer, (string) "Audi", "First Taxi Details");
-                    assert_eq(taxi.data->fare_amount, 23, "First Taxi Details");
+                    assert_eq(taxi.data->fare_amount, 9, "First Taxi Details");
                     assert_eq(taxi.data->number, 1, "First Taxi Details");
 
                     taxi = myTaxiAgency.retrieve_taxi_by_id("2011 Chevrolet Express LS 2500");
@@ -66,7 +65,7 @@ int main(){
                     try{
                         myTaxiAgency.retrieve_taxi_by_id("2012 Chevrolet Coloado Work Truck"); // mispelled
                         cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
-                    }catch(invalid_argument e){}catch(...){
+                    }catch(invalid_argument){}catch(...){
                         cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
                     }
                 });
@@ -121,6 +120,7 @@ int main(){
                     });
                 });
             });
+            
             test_partition("Decrease existing Taxi count", [&]() {
                 assert_eq(myTaxiAgency.remove_taxi_by_id("2009 Audi A3 2.0 T AT").data->number, 3, "Second Taxi count decreased");
                 test_partition("-- Taxi count range below zero", [&]() {
@@ -143,30 +143,241 @@ int main(){
                 });
             });
 
+            test_partition("Search User by UUID", [&]() {
+                test_partition("-- Search Customer by UUID", [&]() {
+                    
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("1woonaa").index, 0, "First Customer");
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("278marian").index, 1, "Second Customer");
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("Janusz").index, 11, "Random Customer near start");
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("behind_you218").index, 28, "Random Customer in the middle");
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("maja78wojtek").index, 50, "Random Customer near end");
+                    assert_eq(myTaxiAgency.search_customer_by_uuid("zula_bula").index, 59, "Last Customer");
 
-            test_partition("Creating & Inserting User", [&]() {
-                // test_partition("-- Add Customer", [&]() {
-                //     myTaxiAgency.add_customer("Ireneusz", "Brajan", "Ireneusz", 46, IDOL);
-                //     myTaxiAgency.add_customer("Pawel", "Dobroslawa", "pawel_dobro", 52, IDOL);
-                // });
-                test_partition("-- Add Driver", [&]() {
-                    myTaxiAgency.add_driver("Pawel", "Natalka", "pawe_nata", "2019/1858358850", IDOL);
+                    test_partition("-- -- Correctness of Customer Details", [&]() {
+                        IndexInstance<Customer> customer =  myTaxiAgency.search_customer_by_uuid("1woonaa");
+
+                        assert_eq(customer.data->getFirstname(), (string) "Iwona", "First Customer Details");
+                        assert_eq(customer.data->getLastname(), (string) "Wislawa", "First Customer Details");
+                        assert_eq(customer.data->getBalance(), 46, "First Customer Details");
+                        assert_eq(customer.data->getStatus(), IDLE, "First Customer Details");
+
+                        customer = myTaxiAgency.search_customer_by_uuid("behind_you218");
+
+                        assert_eq(customer.data->getFirstname(), (string) "Wlodek", "Middle Customer Details");
+                        assert_eq(customer.data->getLastname(), (string) "Jagoda", "Middle Customer Details");
+                        assert_eq(customer.data->getBalance(), 56, "Middle Customer Details");
+                        assert_eq(customer.data->getStatus(), IDLE, "Middle Customer Details");
+                    
+                        customer = myTaxiAgency.search_customer_by_uuid("zula_bula");
+
+                        assert_eq(customer.data->getFirstname(), (string) "Natasza", "Last Customer Details");
+                        assert_eq(customer.data->getLastname(), (string) "Zula", "Last Customer Details");
+                        assert_eq(customer.data->getBalance(), 46, "Last Customer Details");
+                        assert_eq(customer.data->getStatus(), IDLE, "Last Customer Details");
+                    });
+                    test_partition("-- -- Customer Retrieval Exception Handling", [&]() {
+                        try{
+                            myTaxiAgency.search_customer_by_uuid("random_nonexistant_uuid");
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(invalid_argument){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                });             
+                
+                test_partition("-- Search Driver by UUID", [&]() {
+                    
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("0kku").index, 0, "First Customer");
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("12seweryn").index, 1, "Second Customer");
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("Emil_").index, 11, "Random Customer near start");
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("Urban").index, 28, "Random Customer in the middle");
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("krzesimir").index, 50, "Random Customer near end");
+                    assert_eq(myTaxiAgency.search_driver_by_uuid("ramirolaz").index, 59, "Last Customer");
+
+                    test_partition("-- -- Correctness of Driver Details", [&]() {
+                        IndexInstance<Driver> driver =  myTaxiAgency.search_driver_by_uuid("0kku");
+
+                        assert_eq(driver.data->getFirstname(), (string) "Wiktoria", "First Driver Details");
+                        assert_eq(driver.data->getLastname(), (string) "Seweryna", "First Driver Details");
+                        assert_eq(driver.data->getDLN(), (string) "2026/9598325693", "First Driver Details");
+                        assert_eq(driver.data->getStatus(), IDLE, "First Driver Details");
+
+                        driver = myTaxiAgency.search_driver_by_uuid("Urban");
+
+                        assert_eq(driver.data->getFirstname(), (string) "Urban", "Middle Driver Details");
+                        assert_eq(driver.data->getLastname(), (string) "Pola", "Middle Driver Details");
+                        assert_eq(driver.data->getDLN(), (string) "2026/0809430679", "Middle Driver Details");
+                        assert_eq(driver.data->getStatus(), IDLE, "Middle Driver Details");
+                    
+                        driver = myTaxiAgency.search_driver_by_uuid("ramirolaz");
+
+                        assert_eq(driver.data->getFirstname(), (string) "Ramiro", "Last Driver Details");
+                        assert_eq(driver.data->getLastname(), (string) "Lazzari", "Last Driver Details");
+                        assert_eq(driver.data->getDLN(), (string) "2045/5095962113", "Last Driver Details");
+                        assert_eq(driver.data->getStatus(), IDLE, "Last Driver Details");
+                    });
+                    test_partition("-- -- Driver Retrieval Exception Handling", [&]() {
+                        try{
+                            myTaxiAgency.search_driver_by_uuid("random_nonexistant_uuid");
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(invalid_argument){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
                 });
             });
 
-            test_partition("Insertion Exception Handling", [&]() {
-                try{
-                    myTaxiAgency.add_driver("Pawel", "Marek", "pawe_nata", "2026/6688939310", IDOL);
-                    cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
-                }catch(invalid_argument e){}catch(...){
-                    cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
-                }
+            test_partition("Creating & Inserting User", [&]() {
+                test_partition("-- Inserting new Customer", [&]() {
+                    myTaxiAgency.add_customer("Antonina", "Jolanta", "Aaantonio1", 245);
+                    myTaxiAgency.add_customer("Waleria", "Anastazy", "Waleria");
+                    myTaxiAgency.add_customer("Ziemowit", "Izabela", "Ziemowit_", 245, IDLE);
+                    test_partition("-- -- Customer with invalid Registration Details", [&]() {
+                        try{
+                            myTaxiAgency.add_customer("Franciszka", "Sonia", "<Son!a>", 245, IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_customer("Eustachy", "Ida", "Ida__#_", 245, IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_customer("Zachariasz ", "Sonia", "Sonia", 245, IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_customer("Mirek", "Radz\\im", "Mirek", 245, IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                    });
+                    test_partition("-- -- Insert Customer with repeating UUID", [&]() {
+                        try{
+                            myTaxiAgency.add_customer("Ziemowit", "Izabela", "Ziemowit_", 2);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(invalid_argument){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                    myTaxiAgency.add_customer("Jaroslawa", "Mariusz", "Mariusz", 89);
+                    myTaxiAgency.add_customer("Kunegunda", "Fryderyka", "fryderyka7", 245, IDLE);
+                    test_partition("-- -- Capacity to server customer exceeded", [&]() {
+                        try{
+                            myTaxiAgency.add_customer("Miloslaw", "Dymitr", "miloslaw", 245, IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(range_error){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                });
+                
+                test_partition("-- Inserting new Driver", [&]() {
+                    myTaxiAgency.add_driver("Sybilla", "Lucyna", "Sybillalalala", "2026/7341063757");
+                    myTaxiAgency.add_driver("Juliusz", "Karina", "god_", "2026/1179926045", IDLE);
+                    myTaxiAgency.add_driver("Celestyna", "Serafina", "Celestyna", "2026/6610130546");
+                    test_partition("-- -- Driver with invalid Registration Details", [&]() {
+                        try{
+                            myTaxiAgency.add_driver("Teresa", "Beniamin", "T.r.sa", "2026/0302475846", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_driver("Waldek", "Teodozja", "...%&*?$!...", "2026/2065376078", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_driver("Marzanna$", "Sabina", "Sabina", "2049/7036077301", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                        try{
+                            myTaxiAgency.add_driver("Dr.", "Krystyn", "dr_krystyn", "2078/5639892413", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(...){};
+                    });
+                    test_partition("-- -- Insert Customer with repeating UUID", [&]() {
+                        try{
+                            myTaxiAgency.add_driver("Celestyna", "Krystian", "Celestyna", "2026/5908677321", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(invalid_argument){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                    myTaxiAgency.add_driver("Aneta", "Krystiana", "bub", "2026/0466706457", IDLE);
+                    myTaxiAgency.add_driver("Antonie", "Dunn", "pablo", "2026/4358330581", IDLE);
+                    test_partition("-- -- Insertion Exception Handling", [&]() {
+                        try{
+                            myTaxiAgency.add_driver("Pawel", "Marek", "pawe_nata", "2026/6688939310", IDLE);
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }catch(range_error){}catch(...){
+                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        }
+                    });
+                });
+            });
+
+            test_partition("Deleting User by UUID", [&]() {
+                test_partition("-- Deleting Customer", [&]() {
+                    myTaxiAgency.delete_customer_user_by_uuid("1woonaa");
+                    try{
+                        myTaxiAgency.search_customer_by_uuid("1woonaa");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                    myTaxiAgency.delete_customer_user_by_uuid("Jackeveneo");
+                    try{
+                        myTaxiAgency.search_customer_by_uuid("Jackeveneo");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                    myTaxiAgency.delete_customer_user_by_uuid("zula_bula");
+                    try{
+                        myTaxiAgency.search_customer_by_uuid("zula_bula");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+                test_partition("-- Deleting Driver", [&]() {
+                    myTaxiAgency.delete_driver_user_by_uuid("0kku");
+                    try{
+                        myTaxiAgency.delete_driver_user_by_uuid("0kku");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                    myTaxiAgency.delete_driver_user_by_uuid("amato_ap782");
+                    try{
+                        myTaxiAgency.delete_driver_user_by_uuid("amato_ap782");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                    myTaxiAgency.delete_driver_user_by_uuid("ramirolaz");
+                    try{
+                        myTaxiAgency.delete_driver_user_by_uuid("ramirolaz");
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }catch(invalid_argument){}catch(...){
+                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                    }
+                });
+            });
+
+            test_partition("Booking Taxi", [&]() {
+                myTaxiAgency.book_taxi("Renata", "2009 Audi A5 3.2 AT");
+                myTaxiAgency.end_shift("Renata");
+                // myTaxiAgency.print_shift_history();
+            });
+
+            test_partition("Upgrade Taxi Agency", [&]() {
+                myTaxiAgency.upgrade_agency_assets(128, 6, 128);
             });
 
             test_partition("Exporting CSV Data", [&]() {
                 myTaxiAgency.export_taxies(TAXIES_FILE);
                 myTaxiAgency.export_driver_db(DRIVERS_FILE);
                 myTaxiAgency.export_customer_db(CUSTOMERS_FILE);
+                myTaxiAgency.export_ongoing_shifts(CURRENT_SHIFTS_FILE);
+                myTaxiAgency.export_shift_history(SHIFT_HISTORY_FILE);
             });
 
             cout << endl;
