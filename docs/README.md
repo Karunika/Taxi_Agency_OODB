@@ -42,4 +42,4 @@ struct IndexInstance{
 };
 ```
 
-Checkout [Taxi Agency | All Member Functions' Description](./Taxy_Agency.md)
+Checkout [Taxi Agency | All Member Functions' Description](./Taxi_Agency.md)
