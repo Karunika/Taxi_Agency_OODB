@@ -8,7 +8,7 @@ The data is stored in `CSV` file format. Upon the commencement of the program, t
 ## Taxi Booking Design
 Each Shift is instantiated upon the request of a customer with their preferential Taxi. This is called __Taxi Booking__. A Taxi Booking can fail under the following circumstances:
  * The User is not registered with the Taxi Agency
- * The User fails to ensure that it has a minimum Account Balance of being able to pay 12 hours of driver waiting charges and 12 hours of taxi ride ([more info on how the total cost is evaluated](##Total_Cost))
+ * The User fails to ensure that it has a minimum Account Balance of being able to pay 12 hours of driver waiting charges and 12 hours of taxi ride ([more info on how the total cost is evaluated](#Total_Cost))
  * The car id provided by user is either invalid or unavailable
  * The User is already on a shift
  * The Agency has ran out of drivers
@@ -42,4 +42,8 @@ struct IndexInstance{
 };
 ```
 
-Checkout [Taxi Agency | All Member Functions' Description](./Taxi_Agency.md)
+## Member Function Description
+Checkout <br />
+[Taxi Agency](./Taxi_Agency.md)
+[User | Customer | Driver](./User.md)
+[Shift](./Shift.md)

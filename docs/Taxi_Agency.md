@@ -180,9 +180,9 @@ void book_taxi(string customer_uuid, string car_id);
 Instantiates a brand new Shift based on the request of a customer, whose `uuid` has to be provided as the first argument followed by the `id` of car being demanded. If the car `id` is invalid or no drivers are available or the customer doesn't have enough balance, an exception is thrown. Thereafter, the status of the customer is toggled to `ONSHIFT`.
 
 ```cpp
-void extend_shift_tenure(string customer_uuid, int del_running_hours = 12, int del_waiting_hours = 12)
+void extend_shift_tenure(string customer_uuid, int del_running_km = 12, int del_waiting_hours = 12)
 ```
-Increase the `Running hours` and `Waiting Hours` of the of the shift corresponding to the customer with provided `uuid`.
+Increase the `Running kms` and `Waiting Hours` of the of the shift corresponding to the customer with provided `uuid`.
 
 ```cpp
 Shift retrieve_shift_details_by_customer(string customer_uuid);
