@@ -14,13 +14,13 @@ Shift::Shift(string customer_uuid, string driver_in_charge_uuid,  string taxi_id
     waiting_charges(waiting_charges){
 };
 
-Shift::Shift(string customer_uuid, string driver_in_charge_uuid, string taxi_id, int taxi_fare_amount, int waiting_charges, int running_hours, int waiting_hours, int total_cost)
+Shift::Shift(string customer_uuid, string driver_in_charge_uuid, string taxi_id, int taxi_fare_amount, int waiting_charges, int running_kms, int waiting_hours, int total_cost)
     : customer_uuid(customer_uuid),
     driver_in_charge_uuid(driver_in_charge_uuid),
     car_id(taxi_id),
     taxi_fare_amount(taxi_fare_amount),
     waiting_charges(waiting_charges){
-    history_stats["running_hours"] = running_hours;
+    history_stats["running_kms"] = running_kms;
     history_stats["waiting_hours"] = waiting_hours;
     history_stats["total_cost"] = total_cost;
 };
@@ -61,8 +61,8 @@ const int& Shift::getWaitingCharges() const{
     return waiting_charges;
 };
 
-const int& Shift::getRunningHours() const{
-    return history_stats.at("running_hours");
+const int& Shift::getRunningKms() const{
+    return history_stats.at("running_kms");
 };
 
 const int& Shift::getWaitingHours() const{
@@ -73,8 +73,8 @@ const int& Shift::getTotalCost() const{
     return history_stats.at("total_cost");
 };
 
-void Shift::setRunningHours(int running_hours){
-    history_stats["running_hours"] = running_hours;
+void Shift::setRunningKms(int running_kms){
+    history_stats["running_kms"] = running_kms;
 };
 
 void Shift::setWaitingHours(int waiting_hours){
@@ -85,8 +85,8 @@ void Shift::setTotalCost(int total_cost){
     history_stats["total_cost"] = total_cost;
 };
 
-void Shift::updateRunningHours(int del_running_hours){
-    history_stats["running_hours"] += del_running_hours;
+void Shift::updateRunningKms(int del_running_kms){
+    history_stats["running_kms"] += del_running_kms;
 };
 
 void Shift::updateWaitingHours(int del_waiting_hours){
@@ -97,8 +97,8 @@ void Shift::updateTotalCost(int del_total_cost){
     history_stats["total_cost"] += del_total_cost;
 };
 
-void Shift::extend_tenure(int del_running_hours, int del_waiting_hours){
-    updateRunningHours(del_running_hours);
+void Shift::extend_tenure(int del_running_kms, int del_waiting_hours){
+    updateRunningKms(del_running_kms);
     updateWaitingHours(del_waiting_hours);
-    updateTotalCost(del_running_hours*taxi_fare_amount+del_waiting_hours*waiting_charges);
+    updateTotalCost(del_running_kms*taxi_fare_amount+del_waiting_hours*waiting_charges);
 };

@@ -1,6 +1,6 @@
 # Taxi Agency
 
-## Member Function Descriptions:
+## Member Function Description:
 
 ```cpp
 TaxiAgency(); 
@@ -72,7 +72,7 @@ Stringifies the Taxi list into raw `CSV` data and injects it into a file, whose 
 
 
 
-## Customer
+## Customer Related Methods
 ```cpp
 void populate_customer_db(const char* CUSTOMERS_FILE);
 ```
@@ -114,7 +114,7 @@ Stringifies the Customer list into raw `CSV` data and streams it into a file, wh
 
 
 
-## Driver
+## Driver Related Methods
 ```cpp
 void populate_drivers_db(const char* DRIVERS_FILE);
 ```
@@ -153,7 +153,7 @@ Stringifies the Driver list into raw `CSV` data and streams it into a file, whos
 
 
 
-## Shifts
+## Shifts Related Methods
 ```cpp
 void import_current_shifts(const char* CURRENT_SHIFTS_FILE);
 ```

@@ -50,3 +50,6 @@ int Customer::getBalance(){
 void Customer::makeTransaction(int amount){
     balance -= amount;
 };
+void Customer::transferCashToBalance(int amount){
+    balance += amount;
+};

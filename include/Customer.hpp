@@ -34,6 +34,7 @@ class Customer : public User{
         int getBalance();
 
         void makeTransaction(int amount);
+        void transferCashToBalance(int amount);
         
         void toggle_customer_status();
 };

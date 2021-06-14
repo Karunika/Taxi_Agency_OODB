@@ -14,7 +14,7 @@ class Shift{
         int waiting_charges;
 
         unordered_map<string, int> history_stats = {
-            {"running_hours", 0},
+            {"running_kms", 0},
             {"waiting_hours", 0},
             {"total_cost", 0},
         };
@@ -31,19 +31,19 @@ class Shift{
         const string& getCarID() const;
         const int& getFareAmount() const;
         const int& getWaitingCharges() const;
-        const int& getRunningHours() const;
+        const int& getRunningKms() const;
         const int& getWaitingHours() const;
         const int& getTotalCost() const;
 
-        void setRunningHours(int running_hours);
+        void setRunningKms(int running_kms);
         void setWaitingHours(int waiting_hours);
         void setTotalCost(int total_cost);
 
-        void updateRunningHours(int del_running_hours);
+        void updateRunningKms(int del_running_kms);
         void updateWaitingHours(int del_waiting_hours);
         void updateTotalCost(int del_total_cost);
 
-        void extend_tenure(int del_running_hours, int del_waiting_hours);
+        void extend_tenure(int del_running_kms, int del_waiting_hours);
         
         friend ostream& operator<<(ostream& output, const Shift& S);
         void print_shift();

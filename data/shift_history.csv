@@ -1,4 +1,4 @@
-"customer_uuid","driver_uuid","taxi_id","running_hours","waiting_hours","total_cost"
+"customer_uuid","driver_uuid","taxi_id","running_kms","waiting_hours","total_cost"
 "Renata","12seweryn","2009 Audi A5 3.2 AT",9,10,12,12,228
 "Roland_o_o_o_","AlbertEinstein","2012 Chevrolet Colorado Crew Cab 1LT",10,10,13,14,270
 "_get_me_","BrunoAdela","2010 Chevrolet Express LS 1500 AWD",6,10,16,18,276

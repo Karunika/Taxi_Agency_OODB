@@ -414,14 +414,14 @@ void TaxiAgency::export_shift_history(const char* SHIFT_HISTORY_FILE){
     ofstream File;
     File.open(SHIFT_HISTORY_FILE);
     if(File.is_open()){
-        File << "\"customer_uuid\",\"driver_uuid\",\"taxi_id\",\"running_hours\",\"waiting_hours\",\"total_cost\"\n";
+        File << "\"customer_uuid\",\"driver_uuid\",\"taxi_id\",\"running_kms\",\"waiting_hours\",\"total_cost\"\n";
         for(list<Shift>::iterator shift = shift_history.begin(); shift != shift_history.end(); ++shift){
             File << "\"" << shift->getCustomerUUID() << "\",";
             File << "\"" << shift->getDriverUUID() << "\",";
             File << "\"" << shift->getCarID() << "\",";
             File << shift->getFareAmount() << ",";
             File << shift->getWaitingCharges() << ",";
-            File << shift->getRunningHours() << ",";
+            File << shift->getRunningKms() << ",";
             File << shift->getWaitingHours() << ",";
             File << shift->getTotalCost() << "\n";
         }
@@ -483,15 +483,15 @@ void TaxiAgency::book_taxi(string customer_uuid, string car_id){
     throw booking_unsuccessful("Running out of drivers.");
 };
 
-void TaxiAgency::extend_shift_tenure(string customer_uuid, int del_running_hours, int del_waiting_hours){
+void TaxiAgency::extend_shift_tenure(string customer_uuid, int del_running_kms, int del_waiting_hours){
     for(list<Shift>::iterator i = current_shifts.begin(); i != current_shifts.end(); ++i)
         if(i->getCustomerUUID() == customer_uuid){
             IndexInstance<Taxi> taxi = retrieve_taxi_by_id(i->getCarID());
-            int del_total_cost = del_running_hours*taxi.data->fare_amount + del_waiting_hours*WaitingCharges;
+            int del_total_cost = del_running_kms*taxi.data->fare_amount + del_waiting_hours*WaitingCharges;
             if(search_customer_by_uuid(customer_uuid).data->getBalance() < i->getTotalCost()+del_total_cost)
                 throw booking_unsuccessful("Not enough balance to increase the shift tenure");
 
-            i->extend_tenure(del_running_hours, del_waiting_hours);
+            i->extend_tenure(del_running_kms, del_waiting_hours);
             return;
         }
     throw invalid_argument("Customer with the supplied UUID is IDLE");
@@ -508,7 +508,7 @@ void TaxiAgency::end_shift(string customer_uuid){
     for(list<Shift>::iterator i = current_shifts.begin(); i != current_shifts.end(); ++i)
         if(i->getCustomerUUID() == customer_uuid){
             IndexInstance<Taxi> taxi = retrieve_taxi_by_id(i->getCarID());
-            int total_cost = i->getRunningHours()*taxi.data->fare_amount + i->getWaitingHours()*WaitingCharges;
+            int total_cost = i->getRunningKms()*taxi.data->fare_amount + i->getWaitingHours()*WaitingCharges;
             shift_history.push_back(*i);
             current_shifts.erase(i);
             search_customer_by_uuid(customer_uuid).data->makeTransaction(total_cost);
