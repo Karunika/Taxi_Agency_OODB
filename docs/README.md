@@ -44,6 +44,6 @@ struct IndexInstance{
 
 ## Member Function Description
 Checkout <br />
-[Taxi Agency](./Taxi_Agency.md)
-[User | Customer | Driver](./User.md)
+[Taxi Agency](./Taxi_Agency.md) <br />
+[User | Customer | Driver](./User.md) <br />
 [Shift](./Shift.md)
