@@ -50,7 +50,4 @@ It is essential to reset the data back to the initial point in order for the tes
 `./config.hpp` contains the relative paths to all the CSV files.
 
 ## Dependencies
-Dependencies for interactive console testings <br />
-[agauniyal/rang](https://github.com/agauniyal/rang/blob/master/include/rang.hpp)
-
 Sample Data Courtesy: [Taxi Data](https://corgis-edu.github.io/corgis/csv/cars/)

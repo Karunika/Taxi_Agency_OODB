@@ -1,4 +1,3 @@
-#include "./dep/rang.hpp"
 #include <iostream>
 #include <exception>
 
@@ -62,9 +61,9 @@ int main(){
                 test_partition("-- Taxi Retrieval Exception Handling", [&]() {
                     try{
                         myTaxiAgency.retrieve_taxi_by_id("2012 Chevrolet Coloado Work Truck"); // mispelled
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
             });
@@ -75,7 +74,7 @@ int main(){
                 test_partition("-- Insert Taxi with repeated id", [&]() {
                     try{
                         myTaxiAgency.insert_new_taxi_breed(true, "2011 Volvo XC70 3.2", "Volvo", 20, 2);
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(...){}
                 });
                 myTaxiAgency.insert_new_taxi_breed(true, "2011 Volvo XC70 T6 AWD", "Volvo", 20, 3);
@@ -84,9 +83,9 @@ int main(){
                 test_partition("-- Taxi Limit exceeded", [&]() {
                     try{
                         myTaxiAgency.insert_new_taxi_breed(true, "2011 Toyota 4Runner SR5", "Toyota", 20, 2);
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(range_error e){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Increase existing Taxi count", [&]() {
@@ -97,23 +96,23 @@ int main(){
                     test_partition("-- -- Taxi count range Exception", [&]() {
                         try{
                             myTaxiAgency.add_taxi_by_id("2011 Chevrolet Colorado Crew Cab 1LT");
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(range_error){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                         try{
                             myTaxiAgency.add_taxi_by_id("2011 Chevrolet Express LS 1500", 3);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(range_error){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                     test_partition("-- -- Invalid increase factor Exception", [&]() {
                         try{
                             myTaxiAgency.add_taxi_by_id("2011 Chevrolet Colorado Crew Cab 1LT", -3);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(invalid_argument){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                 });
@@ -124,9 +123,9 @@ int main(){
                 test_partition("-- Taxi count range below zero", [&]() {
                     try{
                         myTaxiAgency.remove_taxi_by_id("2009 Audi A4 Sedan 2.0 T Quattro", 5);
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(range_error){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Deleting existing Taxi", [&]() {
@@ -134,9 +133,9 @@ int main(){
                     myTaxiAgency.remove_taxi_by_id("2012 Acura TL SH-AWD", 2);
                     try{
                         myTaxiAgency.retrieve_taxi_by_id("2012 Acura TL SH-AWD");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
             });
@@ -176,9 +175,9 @@ int main(){
                     test_partition("-- -- Customer Retrieval Exception Handling", [&]() {
                         try{
                             myTaxiAgency.search_customer_by_uuid("random_nonexistant_uuid");
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(invalid_argument){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                 });             
@@ -217,9 +216,9 @@ int main(){
                     test_partition("-- -- Driver Retrieval Exception Handling", [&]() {
                         try{
                             myTaxiAgency.search_driver_by_uuid("random_nonexistant_uuid");
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(invalid_argument){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                 });
@@ -233,27 +232,27 @@ int main(){
                     test_partition("-- -- Customer with invalid Registration Details", [&]() {
                         try{
                             myTaxiAgency.add_customer("Franciszka", "Sonia", "<Son!a>", 346, IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_customer("Eustachy", "Ida", "Ida__#_", 980, IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_customer("Zachariasz ", "Sonia", "Sonia", 245, IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_customer("Mirek", "Radz\\im", "Mirek", 345, IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                     });
                     test_partition("-- -- Insert Customer with repeating UUID", [&]() {
                         try{
                             myTaxiAgency.add_customer("Ziemowit", "Izabela", "Ziemowit_", 2);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(invalid_argument){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                     myTaxiAgency.add_customer("Jaroslawa", "Mariusz", "Mariusz", 189);
@@ -261,9 +260,9 @@ int main(){
                     test_partition("-- -- Capacity to server customer exceeded", [&]() {
                         try{
                             myTaxiAgency.add_customer("Miloslaw", "Dymitr", "miloslaw", 245, IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(range_error){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                 });
@@ -275,27 +274,27 @@ int main(){
                     test_partition("-- -- Driver with invalid Registration Details", [&]() {
                         try{
                             myTaxiAgency.add_driver("Teresa", "Beniamin", "T.r.sa", "2026/0302475846", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_driver("Waldek", "Teodozja", "...%&*?$!...", "2026/2065376078", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_driver("Marzanna$", "Sabina", "Sabina", "2049/7036077301", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                         try{
                             myTaxiAgency.add_driver("Dr.", "Krystyn", "dr_krystyn", "2078/5639892413", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(...){};
                     });
                     test_partition("-- -- Insert Customer with repeating UUID", [&]() {
                         try{
                             myTaxiAgency.add_driver("Celestyna", "Krystian", "Celestyna", "2026/5908677321", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(invalid_argument){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                     myTaxiAgency.add_driver("Aneta", "Krystiana", "bub", "2026/0466706457", IDLE);
@@ -303,9 +302,9 @@ int main(){
                     test_partition("-- -- Insertion Exception Handling", [&]() {
                         try{
                             myTaxiAgency.add_driver("Pawel", "Marek", "pawe_nata", "2026/6688939310", IDLE);
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }catch(range_error){}catch(...){
-                            cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                            cout << "This should not be printed" << endl;
                         }
                     });
                 });
@@ -316,46 +315,46 @@ int main(){
                     myTaxiAgency.delete_customer_user_by_uuid("1woonaa");
                     try{
                         myTaxiAgency.search_customer_by_uuid("1woonaa");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                     myTaxiAgency.delete_customer_user_by_uuid("Jackeveneo");
                     try{
                         myTaxiAgency.search_customer_by_uuid("Jackeveneo");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                     myTaxiAgency.delete_customer_user_by_uuid("zula_bula");
                     try{
                         myTaxiAgency.search_customer_by_uuid("zula_bula");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Deleting Driver", [&]() {
                     myTaxiAgency.delete_driver_user_by_uuid("0kku");
                     try{
                         myTaxiAgency.delete_driver_user_by_uuid("0kku");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                     myTaxiAgency.delete_driver_user_by_uuid("amato_ap782");
                     try{
                         myTaxiAgency.delete_driver_user_by_uuid("amato_ap782");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                     myTaxiAgency.delete_driver_user_by_uuid("ramirolaz");
                     try{
                         myTaxiAgency.delete_driver_user_by_uuid("ramirolaz");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
             });
@@ -366,25 +365,25 @@ int main(){
                 test_partition("-- Re-Booking Taxi Exception", [&]() {
                     try{
                         myTaxiAgency.book_taxi("Renata", "2011 BMW X6 M");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(booking_unsuccessful){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Booking without enough Balance", [&]() {
                     try{
                         myTaxiAgency.book_taxi("Ireneusz", "2009 Audi A5 3.2 AT");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(booking_unsuccessful){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Booking instigated by an unregistered Customer", [&]() {
                     try{
                         myTaxiAgency.book_taxi("AlkaBalka", "2011 BMW X6 M");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(invalid_argument){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 myTaxiAgency.book_taxi("JJJJ8888", "2009 Audi A5 3.2 AT");
@@ -394,17 +393,17 @@ int main(){
                 test_partition("-- Booking an Unavailable Taxi", [&]() {
                     try{
                         myTaxiAgency.book_taxi("8brunomars", "2009 Audi A5 3.2 AT");
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(booking_unsuccessful){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 test_partition("-- Providing an Invalid Taxi Id", [&]() {
                     try{
                         myTaxiAgency.book_taxi("8brunomars", "2012 ura TL"); // mispelled
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }catch(booking_unsuccessful){}catch(...){
-                        cout << rang::style::italic << "This should not be printed" << rang::style::reset << endl;
+                        cout << "This should not be printed" << endl;
                     }
                 });
                 myTaxiAgency.book_taxi("Roland_o_o_o_", "2012 Chevrolet Colorado Crew Cab 1LT");
@@ -472,13 +471,13 @@ int main(){
             cout << endl;
         }
 
-        cout << rang::fg::green << "Tests successful!" << endl;
+        cout << "Tests successful!" << endl;
 
 
     }catch(assertion_failure& e){
-        cout << rang::fg::red << "Test Failed: Assertion \"" << e.what() << "\" failure" << endl;
+        cout << "Test Failed: Assertion \"" << e.what() << endl;
     }catch(std::exception& e){
-        cout << rang::fg::red << e.what() << endl;
+        cout << e.what() << endl;
     }
     return 0;
 }

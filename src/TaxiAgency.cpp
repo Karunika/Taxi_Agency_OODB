@@ -33,15 +33,15 @@ TaxiAgency::TaxiAgency(){
     driver_db.reserve(DriverLimit+1);
     customer_db.reserve(DriverLimit+1);
 
-    cout << rang::fg::yellow << "A Taxi Agency has been instantiated" << rang::fg::reset << endl;
+    cout << "A Taxi Agency has been instantiated" << endl;
 };
 
 TaxiAgency::~TaxiAgency(){
-    cout << rang::fg::yellow << "Taxi Agency has been purged" << rang::fg::reset << endl;
+    cout << "Taxi Agency has been purged" << endl;
 };
 
 ostream& operator<<(ostream& output, TaxiAgency& A){
-    output << rang::fg::blue << "Taxi Agency Details:" << rang::fg::reset << endl;
+    output << "Taxi Agency Details:" << endl;
     output << "{" <<
         "\n\tcapacity : " <<
             "\n\t\tgarage Limit : " << A.GarageLimit <<
@@ -81,11 +81,11 @@ static IndexInstance<T> search_by_uuid(string uuid, vector<T>& users_list){
     int mid;
     if(users_list[users_list.size()-1] < uuid)
         throw invalid_argument("User with the provided uuid doesn't exist");
-    // cout << rang::fg::red << uuid << rang::fg::reset << endl;
-    // cout << rang::fg::red << users_list.size() << rang::fg::reset << endl;
+    // cout << uuid << endl;
+    // cout << users_list.size() << endl;
     while(low <= high){
         mid = (high+low)/2;
-        // cout << rang::fg::blue << low << rang::fg::reset << " - " << mid << " - " << rang::fg::blue << high << rang::fg::reset << endl;
+        // cout << low << " - " << mid << " - " << high << endl;
         if(users_list[mid] == uuid){
             // cout << endl;
             return {mid, &users_list[mid]};
@@ -127,7 +127,7 @@ void TaxiAgency::populate_taxies(const char* TAXIES_FILE){
 };
 
 void TaxiAgency::print_taxies(){
-    cout << rang::fg::blue << "Taxies List:" << rang::fg::reset << endl;
+    cout << "Taxies List:" << endl;
     cout << "[" << endl;
     for(auto taxi: taxies){
         taxi.print();
@@ -224,7 +224,7 @@ void TaxiAgency::populate_customer_db(const char* CUSTOMERS_FILE){
 };
 
 void TaxiAgency::print_customer_db(){
-    cout << rang::fg::blue << "Customers List:" << rang::fg::reset << endl;
+    cout << "Customers List:" << endl;
     cout << "[" << endl;
     for(auto customer: customer_db){
         customer.print();
@@ -306,7 +306,7 @@ void TaxiAgency::populate_drivers_db(const char* DRIVERS_FILE){
 };
 
 void TaxiAgency::print_drivers_db(){
-    cout << rang::fg::blue << "Drivers List:" << rang::fg::reset << endl;
+    cout << "Drivers List:" << endl;
     cout << "[" << endl;
     for(auto driver: driver_db){
         driver.print();
