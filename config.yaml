@@ -6,8 +6,6 @@ scripts:
   build: make
   reste: make reset
   clean: clean
-dependencies:
-  agauniyal/rang
 private: false
 keywords:
   taxi
