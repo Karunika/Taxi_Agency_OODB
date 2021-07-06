@@ -21,7 +21,7 @@ make // compile tests
 
 ```cpp
 make reset // compile reset file
-./output // run reset
+./reset // run reset
 ```
 
 ```cpp
